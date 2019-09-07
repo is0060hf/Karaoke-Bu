@@ -1,0 +1,17 @@
+
+select.datetime-picker{
+    width: initial;
+}
+
+p.form-paragraph{
+    font-size: 1.0em;
+    line-height: 1.0em;
+    margin-top: 0;
+    margin-bottom: 2.0em;
+}
+
+.flash-render {
+    color: red;
+    text-align: center;
+    margin-top: 1em;
+}
