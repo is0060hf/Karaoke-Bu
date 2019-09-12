@@ -93,13 +93,13 @@
 					</a>
 					<ul class="nav-second-level" aria-expanded="false">
 						<li>
-							<?= $this->Html->link(__('新規カラオケ登録'), ['controller' => 'Users', 'action' => 'add']) ?>
+							<?= $this->Html->link(__('新規カラオケ登録'), ['controller' => 'Stores', 'action' => 'add']) ?>
 						</li>
 						<li>
-							<?= $this->Html->link(__('カラオケ一覧'), ['controller' => 'Users', 'action' => 'index']) ?>
+							<?= $this->Html->link(__('カラオケ一覧'), ['controller' => 'Stores', 'action' => 'index']) ?>
 						</li>
 						<li>
-							<?= $this->Html->link(__('お気に入りカラオケ'), ['controller' => 'Users', 'action' => 'index']) ?>
+							<?= $this->Html->link(__('お気に入りカラオケ'), ['controller' => 'Stores', 'action' => 'index']) ?>
 						</li>
 					</ul>
 				</li>
