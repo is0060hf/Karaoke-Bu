@@ -41,6 +41,28 @@
 		</tr>
 	</table>
 	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="header-title">店舗画像</h4>
+					<p class="sub-header">
+						以下の領域をクリックして店舗画像をアップロードしてください。ドラッグアンドドロップでもアップロード可能です。
+					</p>
+					<form action="/" method="post" class="dropzone dz-clickable" id="myAwesomeDropzone">
+						<div class="dz-message needsclick">
+							<i class="h1 text-muted dripicons-cloud-upload"></i>
+							<h3>Drop files here or click to upload.</h3>
+							<span class="text-muted font-13">アップロードできる容量は10MBまでです。</span>
+						</div>
+					</form>
+					<div class="clearfix text-right mt-3">
+						<?= $this->Form->postLink(__('画像をアップロード'), ['action' => 'addImage', $store->id], ['confirm' => __('本当に削除してもよろしいでしょうか # {0}?', $store->id)]) ?>
+					</div>
+				</div> <!-- end card-body -->
+			</div>
+		</div> <!-- end col-->
+	</div>
+	<div class="row">
 		<div class="col-12 text-center">
 			<a href="<?= $this->Url->build(['controller'=>'Stores','action'=>'edit',$store->id]); ?>" class="btn btn-success mr-3">
 				<i class="fe-edit"></i>
@@ -53,3 +75,4 @@
 		</div>
 	</div>
 </div>
+<input type="file" multiple="multiple" class="dz-hidden-input" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;">

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Util\ModelUtil;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Settings;
 
@@ -192,6 +193,38 @@ class StoresController extends AppController
 		}
 
 		return $this->redirect(['action' => 'index']);
+	}
+
+	/**
+	 * 店舗画像を追加する機能
+	 *
+	 * 権限：だれでも
+	 * ログイン要否：要
+	 * 画面遷移：なし
+	 *
+	 * @param null $storeId
+	 */
+	public function addImage($storeId = null){
+		$this->request->allowMethod(['post']);
+
+		if($storeId){
+			$storeImageEntity = TableRegistry::get('StoreImages');
+			$storeImage = $storeImageEntity->newEntity();
+			$storeImage = $storeImageEntity->patchEntity($storeImage, $this->request->getData());
+			$storeImage->store_id = $storeId;
+
+			if ($this->Friends->save($friend)) {
+				$this->Flash->success(__('ともだち登録しました。'));
+
+				$url = $this->referer(array('action' => 'index'));
+				return $this->redirect($url);
+			} else {
+				$this->Flash->error(__('ともだち登録に失敗しました。しばらくしてからやり直してください。'));
+
+				$url = $this->referer(array('action' => 'index'));
+				return $this->redirect($url);
+			}
+		}
 	}
 
 }

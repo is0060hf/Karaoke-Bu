@@ -17,6 +17,8 @@
 	<!-- Sweet Alert-->
 	<link href="/css/vendor/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
+	<link href="/css/vendor/dropzone.min.css" rel="stylesheet" type="text/css">
+
 	<!-- App css -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 	<link href="/css/icons.min.css" rel="stylesheet" type="text/css"/>
@@ -63,7 +65,7 @@
 <script src="/js/vendor/Chart.bundle.js"></script>
 <script src="/js/vendor/jquery.sparkline.min.js"></script>
 <script src="/js/vendor/jquery.knob.min.js"></script>
-
+<script src="/js/vendor/dropzone.min.js"></script>
 
 </body>
 </html>
