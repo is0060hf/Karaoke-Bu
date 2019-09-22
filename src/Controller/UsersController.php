@@ -234,28 +234,32 @@
 				$sha_query = sha1($user->mail_address . $user->password);
 				$user->auth_flg = false;
 				$user->uuid = $sha_query;
-				if ($this->Users->save($user)) {
-					TransportFactory::setConfig('mailtrap', [
-						'host' => 'smtp.mailtrap.io',
-						'port' => 2525,
-						'username' => '294cde5d2866a3',
-						'password' => '0553a77e71612a',
-						'className' => 'Smtp'
-					]);
-					$email = new Email('default');
-					$email_body = AUTH_MAIL_BODY;
-					$one_time_url = 'http://localhost:8000/users/auth?query=' . $sha_query;
-					$email_body = str_replace("{{_$1_}}", $user->nick_name, $email_body);
-					$email_body = str_replace("{{_$2_}}", $one_time_url, $email_body);
-					$email->from(['info@taylormode.co.jp' => 'カラオケ部'])
-						->to($user->mail_address)
-						->subject(AUTH_MAIL_TITLE)
-						->send($email_body);
 
-					$this->Flash->success(__('ご登録ありがとうございました。'));
-					return $this->redirect(['controller' => 'pages', 'action' => 'complete_user_registration']);
+				if ($this->request->getData('password') === $this->request->getData('confirm_password')) {
+					if ($this->Users->save($user)) {
+						TransportFactory::setConfig('mailtrap', [
+							'host' => 'smtp.mailtrap.io',
+							'port' => 2525,
+							'username' => '294cde5d2866a3',
+							'password' => '0553a77e71612a',
+							'className' => 'Smtp'
+						]);
+						$email = new Email('default');
+						$email_body = AUTH_MAIL_BODY;
+						$one_time_url = 'http://localhost:8000/users/auth?query=' . $sha_query;
+						$email_body = str_replace("{{_$1_}}", $user->nick_name, $email_body);
+						$email_body = str_replace("{{_$2_}}", $one_time_url, $email_body);
+						$email->from(['info@taylormode.co.jp' => 'カラオケ部'])
+							->to($user->mail_address)
+							->subject(AUTH_MAIL_TITLE)
+							->send($email_body);
+
+						$this->Flash->success(__('ご登録ありがとうございました。'));
+						return $this->redirect(['controller' => 'pages', 'action' => 'complete_user_registration']);
+					}
+				} else {
+					$this->Flash->error(__('パスワードと確認用パスワードが一致しません。'));
 				}
-				$this->Flash->error(__('サーバーエラーにより登録ができませんでした。'));
 			}
 			$this->set(compact('user'));
 			return null;

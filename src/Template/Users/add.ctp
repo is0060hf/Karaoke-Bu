@@ -61,6 +61,20 @@
 			),
 			'class' => 'form-control'      // inputタグのクラス名
 		));
+		echo $this->Form->control('confirm_password', array(
+			'label' => array(
+				'text' => 'パスワード（確認用）',       // labelで出力するテキスト
+				'class' => 'col-form-label' // labelタグのクラス名
+			),
+			'type' => 'password',
+			'templateVars' => array(
+				'div_class' => 'form-group row',
+				'div_tooltip' => 'tooltip',
+				'div_tooltip_placement' => 'top',
+				'div_tooltip_title' => '確認の為、もう一度パスワードを入力してください。'
+			),
+			'class' => 'form-control'      // inputタグのクラス名
+		));
 		echo $this->Form->control('nick_name', array(
 			'label' => array(
 				'text' => 'ユーザー名（表示用）',       // labelで出力するテキスト
