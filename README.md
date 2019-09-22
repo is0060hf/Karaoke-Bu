@@ -1,51 +1,55 @@
-# CakePHP Application Skeleton
+# カラオケ部
 
-[![Build Status](https://img.shields.io/travis/cakephp/app/master.svg?style=flat-square)](https://travis-ci.org/cakephp/app)
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
+## 概要
 
-A skeleton for creating applications with [CakePHP](https://cakephp.org) 3.x.
+カラオケに行きたい人達をつなげるためのWEBサービス。単につなげるだけではなく、効率的に、そしてより相性の良い人とつながる仕組みが満載です。単に歌が好きな人、とあるアーティストのファン、楽器の練習をしたい人、勉強や作業をしたい人。カラオケを使う理由は様々です。ですが割と同じ理由でカラオケを利用している人が多いのも事実・・・
 
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+カラオケ部ではそういった同様の理由でカラオケを使いたい人たちを効率的にマッチングします。友達の輪を広げたい、カラオケのレパートリーを増やしたい、歌がもっとうまくなりたい、様々な目的を持った人たちが集まるカラオケ部は、一言で表現してしまえば学校の部活動です。
 
-## Installation
+### ターゲット
 
-1. Download [Composer](https://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
+カラオケ部のターゲットは至って単純明快で、「カラオケが好き」「インターネットをよく利用する」の2点に当てはまる人です。性別や年齢、職業は全く関係ありません。
 
-If Composer is installed globally, run
+### 目的
 
-```bash
-composer create-project --prefer-dist cakephp/app
-```
+開発者自身が無類のカラオケ好きなので、コミュニティが活性化する事が一番の目的です。要は「自分が思い立った時に、一緒にカラオケへ行く仲間が簡単に見つかる」場を作り上げることが目的です。
 
-In case you want to use a custom app dir name (e.g. `/myapp/`):
+理想は、目的に応じてカラオケ仲間を作れるようになる事です。例えばカラオケに行きたいと思ったとして、その理由は「単に歌いまくりたい」だったり「レパートリーを増やしたい」だったり「他人と一緒に歌いたい」だったり色々です。その時の気分に合わせて仲間が見つかる場を作れたら最高だと思いませんか？
 
-```bash
-composer create-project --prefer-dist cakephp/app myapp
-```
+## スケジュール
 
-You can now either use your machine's webserver to view the default home page, or start
-up the built-in webserver with:
+### Phase1.0
 
-```bash
-bin/cake server -p 8765
-```
+まずはサービスの骨格を作ってそれをαテスト版としてリリースします。リリース予定日は2019年10月1日を予定しています。
 
-Then visit `http://localhost:8765` to see the welcome page.
+### Phase1.1
 
-## Update
+αテスト版のテストで発覚した障害や課題の適応、テスターからの要望などを適応しPhase1.1をリリースします。リリース予定日は2019年11月1日を予定しています。
 
-Since this skeleton is a starting point for your application and various files
-would have been modified as per your needs, there isn't a way to provide
-automated upgrades, so you have to do any updates manually.
+## 機能一覧
 
-## Configuration
+#### ユーザー関連
 
-Read and edit `config/app.php` and setup the `'Datasources'` and any other
-configuration relevant for your application.
+- 新規ユーザー登録
+  - 確認用パスワード
+  - メールアドレス認証
+- ユーザー情報編集
+  - パスワード変更
 
-## Layout
+#### イベント関連
 
-The app skeleton uses a subset of [Foundation](http://foundation.zurb.com/) (v5) CSS
-framework by default. You can, however, replace it with any other library or
-custom styles.
+- 新規イベント登録
+- イベント編集
+- イベント削除
+
+#### カラオケ店舗関連
+
+- 新規店舗登録
+- 店舗情報編集
+- 店舗オーナー認証（未定）
+
+#### フレンド関連
+
+- 新規フレンド登録
+- フレンド解除
+
