@@ -1,13 +1,15 @@
 <?php
-	/**
-	 * @var \App\View\AppView $this
-	 * @var \App\Model\Entity\User $user
-	 */
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User $user
+ */
 ?>
 <div class="breadcrumb_div">
 	<ol class="breadcrumb m-b-20">
-		<li class="breadcrumb-item"><a href="<?php echo $this->Url->build(['controller'=>'Users', 'action'=>'index']); ?>">Home</a></li>
-		<li class="breadcrumb-item"><a href="<?php echo $this->Url->build(['controller'=>'Users', 'action'=>'index']); ?>">会員情報一覧</a></li>
+		<li class="breadcrumb-item"><a
+				href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">Home</a></li>
+		<li class="breadcrumb-item"><a
+				href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">会員情報一覧</a></li>
 		<li class="breadcrumb-item active">ユーザー詳細</li>
 	</ol>
 </div>
@@ -64,9 +66,18 @@
 					<span>パスワード変更</span>
 				</a>
 				<?php
+				if ($this->request->session()->read('Auth.User.id') == $user->id) {
+					?>
+					<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'unsubscribe', $user->id]); ?>"
+						 class="btn btn-danger mr-3">
+						<i class="fe-trash"></i>
+						<span>退会する</span>
+					</a>
+					<?php
+				}
 			}
 			?>
-			<a href="<?= $this->Url->build(['controller'=>'Users','action'=>'index']); ?>" class="btn btn-info">
+			<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>" class="btn btn-info">
 				<i class="fe-skip-back"></i>
 				<span>一覧に戻る</span>
 			</a>

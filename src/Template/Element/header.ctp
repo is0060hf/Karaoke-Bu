@@ -43,10 +43,16 @@
 						<i class="fe-user"></i>
 						<span>ユーザー情報</span>
 					</a>
+					<div class="dropdown-divider"></div>
 					<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"
 						 class="dropdown-item notify-item">
 						<i class="fe-log-out"></i>
 						<span>ログアウト</span>
+					</a>
+					<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'unsubscribe', $this->request->session()->read('Auth.User.id')]); ?>"
+						 class="dropdown-item notify-item">
+						<i class="fe-trash"></i>
+						<span>退会する</span>
 					</a>
 					<?php
 				} else {

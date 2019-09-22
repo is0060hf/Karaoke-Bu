@@ -52,7 +52,7 @@ class UsersController extends AppController
 		}
 
 		// 本人のみ許可するアクション(各アクションで処理)
-		if (in_array($this->request->getParam('action'), ['passwordUpdate'])) {
+		if (in_array($this->request->getParam('action'), ['passwordUpdate', 'unsubscribe'])) {
 			return true;
 		}
 
@@ -314,7 +314,7 @@ class UsersController extends AppController
 	public function passwordUpdate($id = null)
 	{
 		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM && $this->request->session()->read('Auth.User.id') != $id) {
-			$this->Flash->success(__('ご指定の操作は権限がありません。'));
+			$this->Flash->error(__('ご指定の操作は権限がありません。'));
 			return $this->redirect(['controller' => 'pages', 'action' => 'error_user_roll']);
 		}
 
@@ -355,12 +355,47 @@ class UsersController extends AppController
 				}
 			} else {
 				$this->Flash->error(__('入力されたパスワードが異なります。'));
-
 			}
 
 		}
 		$this->set(compact('user'));
 		return null;
+	}
+
+	/**
+	 * 退会処理を行う為のメソッド
+	 *
+	 * 権限：誰でも
+	 * ログイン要否：要
+	 * 画面遷移：
+	 * @param null $id
+	 * @return \Cake\Http\Response|null
+	 */
+	public function unsubscribe($id = null){
+		if ($this->request->session()->read('Auth.User.id') != $id) {
+			$this->Flash->error(__('ご指定の操作は権限がありません。'));
+			return $this->redirect(['controller' => 'pages', 'action' => 'error_user_roll']);
+		}
+
+		$this->viewBuilder()->setLayout('editor_layout');
+		$user = $this->Users->get($id);
+
+		if ($this->request->is(['patch', 'post', 'put'])) {
+			$password = $this->request->getData('password');
+			if (password_verify($password, $user->password)) {
+				if ($this->Users->delete($user)) {
+					$this->Flash->success(__('退会処理が完了致しました。'));
+					$this->Auth->logout();
+					$this->request->session()->destroy();
+					return $this->redirect(['controller' => 'pages', 'action' => 'complete_user_unsubscribe']);
+				} else {
+					$this->Flash->error(__('退会処理中にエラーが発生しました。。'));
+				}
+			} else {
+				$this->Flash->error(__('入力されたパスワードが異なります。'));
+			}
+		}
+		$this->set(compact('user'));
 	}
 
 	/**
