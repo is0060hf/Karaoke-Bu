@@ -74,6 +74,9 @@ class PagesController extends AppController
 			case 'complete-user-authentication':
 				$this->layout = 'my_complete_layout';
 				break;
+			case 'complete-user-unsubscribe':
+				$this->layout = 'my_unsubscribe_layout';
+				break;
 			case 'error-user-authentication':
 				$this->layout = 'my_error_layout';
 				break;
