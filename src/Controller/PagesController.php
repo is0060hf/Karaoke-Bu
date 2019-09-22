@@ -74,6 +74,12 @@ class PagesController extends AppController
 			case 'complete-user-authentication':
 				$this->layout = 'my_complete_layout';
 				break;
+			case 'error-user-authentication':
+				$this->layout = 'my_error_layout';
+				break;
+			case 'error-user-roll':
+				$this->layout = 'my_error_layout';
+				break;
 			default:
 				break;
 		}

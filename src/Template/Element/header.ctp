@@ -35,7 +35,7 @@
 					}
 				?>
 				<?php
-				if ($this->request->session()->check('Auth.User')) {
+				if ($this->request->session()->check('Auth')) {
 					?>
 					<a
 						href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->session()->read('Auth.User.id')]); ?>"

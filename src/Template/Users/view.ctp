@@ -50,14 +50,22 @@
 	</table>
 	<div class="row">
 		<div class="col-12 text-center">
-			<a href="<?= $this->Url->build(['controller'=>'Users','action'=>'edit',$user->id]); ?>" class="btn btn-success mr-3">
-				<i class="fe-edit"></i>
-				<span>編集する</span>
-			</a>
-			<a href="<?= $this->Url->build(['controller'=>'Users','action'=>'password_update',$user->id]); ?>" class="btn btn-outline-success mr-3">
-				<i class="fe-edit"></i>
-				<span>パスワード変更</span>
-			</a>
+			<?php
+			if ($this->request->session()->read('Auth.User.role') == ROLE_SYSTEM || $this->request->session()->read('Auth.User.id') == $user->id) {
+				?>
+				<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'edit', $user->id]); ?>"
+					 class="btn btn-success mr-3">
+					<i class="fe-edit"></i>
+					<span>編集する</span>
+				</a>
+				<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'password_update', $user->id]); ?>"
+					 class="btn btn-outline-success mr-3">
+					<i class="fe-edit"></i>
+					<span>パスワード変更</span>
+				</a>
+				<?php
+			}
+			?>
 			<a href="<?= $this->Url->build(['controller'=>'Users','action'=>'index']); ?>" class="btn btn-info">
 				<i class="fe-skip-back"></i>
 				<span>一覧に戻る</span>
