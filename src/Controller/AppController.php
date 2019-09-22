@@ -39,6 +39,7 @@
 		 * e.g. `$this->loadComponent('Security');`
 		 *
 		 * @return void
+		 * @throws \Exception
 		 */
 		public function initialize() {
 			parent::initialize();
@@ -51,7 +52,7 @@
 
 			$this->loadComponent('Auth', [
 					'authorize' => ['Controller'],
-					'authError' => 'ユーザー認証に失敗しました。',
+					'authError' => 'ログインしてください。',
 					'storage' => 'Session',
 					'loginRedirect' => [
 						'controller' => 'Tops',

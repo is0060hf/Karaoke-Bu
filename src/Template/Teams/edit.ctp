@@ -7,7 +7,7 @@
 <div class="breadcrumb_div">
 	<ol class="breadcrumb m-b-20">
 		<li class="breadcrumb-item"><a
-				href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">Home</a></li>
+				href="<?php echo $this->Url->build(['controller' => 'Tops', 'action' => 'index']); ?>">Home</a></li>
 		<li class="breadcrumb-item"><a
 				href="<?php echo $this->Url->build(['controller' => 'Teams', 'action' => 'index']); ?>">チーム一覧</a></li>
 		<li class="breadcrumb-item"><a

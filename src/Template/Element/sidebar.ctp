@@ -4,7 +4,7 @@
 	<div class="slimscroll-menu">
 
 		<!-- LOGO -->
-		<a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>"
+		<a href="<?php echo $this->Url->build(['controller' => 'Tops', 'action' => 'index']); ?>"
 			 class="logo text-center mb-4">
 			<span class="logo-lg">
 				<img src="/assets/images/logo.png" alt="" height="60">

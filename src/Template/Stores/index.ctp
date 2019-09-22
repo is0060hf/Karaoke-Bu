@@ -19,7 +19,7 @@ foreach ($userList as $usr) {
 	<div class="col-6 breadcrumb_div">
 		<ol class="breadcrumb m-b-20">
 			<li class="breadcrumb-item"><a
-					href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">Home</a></li>
+					href="<?php echo $this->Url->build(['controller' => 'Tops', 'action' => 'index']); ?>">Home</a></li>
 			<li class="breadcrumb-item active">店舗情報一覧</li>
 		</ol>
 	</div>
