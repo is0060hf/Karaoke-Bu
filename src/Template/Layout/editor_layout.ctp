@@ -132,11 +132,32 @@
 			}
 		});
 	}
+
+	/**
+	 * Get the URL parameter value
+	 *
+	 * @param  name {string} パラメータのキー文字列
+	 * @return  url {url} 対象のURL文字列（任意）
+	 */
+	function getParam(name, url) {
+		if (!url) url = window.location.href;
+		name = name.replace(/[\[\]]/g, "\\$&");
+		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
 </script>
 <script type="text/javascript">
+	$(document).ready(function () {
+		if ($('#region').length) {
+			$('#region').trigger('change');
+		}
+	});
+
 	$('#region').on('change', function () {
 		const region = $(this).val();
-		console.log('test');
 		$.ajax({
 			url: "<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'ajaxGetPrefecture']); ?>",
 			type: 'get',
@@ -146,23 +167,26 @@
 			}
 		})
 			.done((data) => {
-				console.log(data);
 				$('#prefecture option').remove();
 				$('#prefecture').append($('<option>').text('未選択').attr('value', -1));
 
-				if (data.result.length == 0) {
+				if (data.result.length === 0) {
 					$('#prefecture').prop('disabled', true);
 				} else {
 					$('#prefecture').prop('disabled', false);
 				}
 
 				for (const prefecture in data.result) {
-					console.log(prefecture);
-					$('#prefecture').append($('<option>').text(data.result[prefecture]['prefectureValue']).attr('value', data.result[prefecture]['prefectureCode']));
+					const prefectureParam = getParam('prefecture');
+					if (prefectureParam === data.result[prefecture]['prefectureCode']) {
+						$('#prefecture').append($('<option>').text(data.result[prefecture]['prefectureValue']).attr('value', data.result[prefecture]['prefectureCode']).prop('selected', true));
+					} else {
+						$('#prefecture').append($('<option>').text(data.result[prefecture]['prefectureValue']).attr('value', data.result[prefecture]['prefectureCode']));
+					}
 				}
 			})
 			.fail((data) => {
-				console.log(data);
+				// console.log(data);
 			})
 	});
 </script>

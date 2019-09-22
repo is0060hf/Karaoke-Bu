@@ -54,7 +54,7 @@
 					'authError' => 'ユーザー認証に失敗しました。',
 					'storage' => 'Session',
 					'loginRedirect' => [
-							'controller' => 'Users',
+						'controller' => 'Tops',
 							'action' => 'index'
 					],
 					'logoutRedirect' => [

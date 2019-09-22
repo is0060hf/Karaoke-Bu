@@ -2,12 +2,10 @@
 
 	namespace App\Controller;
 
-	use App\Util\ModelUtil;
-	use Cake\Event\Event;
-	use Cake\ORM\TableRegistry;
-	use PhpOffice\PhpSpreadsheet\Spreadsheet;
-	use PhpOffice\PhpSpreadsheet\Settings;
 	use Cake\Auth\DefaultPasswordHasher;
+	use Cake\Event\Event;
+	use Cake\Mailer\Email;
+	use Cake\Mailer\TransportFactory;
 
 
 	/**
@@ -28,6 +26,7 @@
 			if (strlen($password) > 0) {
 				return (new DefaultPasswordHasher)->hash($password);
 			}
+			return '';
 		}
 
 		/**
@@ -39,12 +38,12 @@
 		 */
 		public function beforeFilter(Event $event) {
 			parent::beforeFilter($event);
-			$this->Auth->allow(['logout', 'forbidden', 'add']);
+			$this->Auth->allow(['logout', 'forbidden', 'add', 'ajaxGetPrefecture', 'auth']);
 		}
 
 		public function isAuthorized($user) {
 			//ログアウトと権限エラー時はスルー
-			if (in_array($this->request->getParam('action'), ['forbidden', 'logout', 'add'])) {
+			if (in_array($this->request->getParam('action'), ['forbidden', 'logout', 'add', 'ajaxGetPrefecture', 'auth'])) {
 				return true;
 			}
 
@@ -118,6 +117,7 @@
 				$this->Flash->error(__('ログイン情報に誤りがあります。'));
 			}
 			$this->set(compact('user'));
+			return $this->redirect(['controller' => 'tops', 'action' => 'index']);
 		}
 
 		/**
@@ -176,6 +176,50 @@
 		}
 
 		/**
+		 * メール認証要のメソッド
+		 *
+		 * 権限：だれでも
+		 * ログイン要否：不要
+		 * 画面遷移：なし
+		 *
+		 */
+		public function auth()
+		{
+			$this->request->allowMethod(['get']);
+			$query = $this->request->getQuery('query');
+
+			if ($query) {
+				$user = $this->Users->find('All')->where(['uuid' => $query])->first();
+
+				if ($user) {
+
+					if ($user->auth_flg) {
+						$this->Flash->success(__('この認証URLは既に認証済みです。'));
+						return $this->redirect(['controller' => 'tops', 'action' => 'index']);
+					} else {
+						$user->auth_flg = true;
+						$user->uuid = null;
+
+						if ($this->Users->save($user)) {
+							return $this->redirect(['controller' => 'pages', 'action' => 'complete_user_authentication']);
+						} else {
+							return $this->redirect(['controller' => 'pages', 'action' => 'error_user_authentication']);
+						}
+					}
+
+				} else {
+					$this->Flash->success(__('この認証URLは無効です。'));
+					return $this->redirect(['controller' => 'tops', 'action' => 'index']);
+				}
+
+			} else {
+				$this->Flash->success(__('この認証URLのフォーマットは不正です。'));
+				return $this->redirect(['controller' => 'tops', 'action' => 'index']);
+			}
+
+		}
+
+		/**
 		 * 会員情報を追加するメソッド
 		 * 権限：だれでも
 		 * 画面遷移：ログイン画面へ遷移
@@ -187,13 +231,34 @@
 			if ($this->request->is('post')) {
 				$user = $this->Users->patchEntity($user, $this->request->getData());
 				$user->password = password_hash($user->password,PASSWORD_DEFAULT);
+				$sha_query = sha1($user->mail_address . $user->password);
+				$user->auth_flg = false;
+				$user->uuid = $sha_query;
 				if ($this->Users->save($user)) {
+					TransportFactory::setConfig('mailtrap', [
+						'host' => 'smtp.mailtrap.io',
+						'port' => 2525,
+						'username' => '294cde5d2866a3',
+						'password' => '0553a77e71612a',
+						'className' => 'Smtp'
+					]);
+					$email = new Email('default');
+					$email_body = AUTH_MAIL_BODY;
+					$one_time_url = 'http://localhost:8000/users/auth?query=' . $sha_query;
+					$email_body = str_replace("{{_$1_}}", $user->nick_name, $email_body);
+					$email_body = str_replace("{{_$2_}}", $one_time_url, $email_body);
+					$email->from(['info@taylormode.co.jp' => 'カラオケ部'])
+						->to($user->mail_address)
+						->subject(AUTH_MAIL_TITLE)
+						->send($email_body);
+
 					$this->Flash->success(__('ご登録ありがとうございました。'));
-					return $this->redirect(['action' => 'login']);
+					return $this->redirect(['controller' => 'pages', 'action' => 'complete_user_registration']);
 				}
 				$this->Flash->error(__('サーバーエラーにより登録ができませんでした。'));
 			}
 			$this->set(compact('user'));
+			return null;
 		}
 
 		/**
@@ -217,6 +282,7 @@
 				$this->Flash->error(__('会員情報を更新できませんでした。'));
 			}
 			$this->set(compact('user'));
+			return null;
 		}
 
 		/**
@@ -239,6 +305,7 @@
 				$this->Flash->error(__('パスワードを更新できませんでした。'));
 			}
 			$this->set(compact('user'));
+			return null;
 		}
 
 		/**

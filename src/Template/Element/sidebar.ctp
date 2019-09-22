@@ -5,7 +5,7 @@
 
 		<!-- LOGO -->
 		<a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>"
-		   class="logo text-center mb-4">
+			 class="logo text-center mb-4">
 			<span class="logo-lg">
 				<img src="/assets/images/logo.png" alt="" height="60">
 			</span>
@@ -20,26 +20,23 @@
 			<ul class="metismenu" id="side-menu">
 
 				<?php
-					if ($this->request->session()->read('Auth.User.role') == ROLE_SYSTEM) {
-						?>
-						<li>
-							<a href="javascript: void(0);">
-								<i class="fe-users"></i>
-								<span> 会員情報 </span>
-								<span class="menu-arrow"></span>
-							</a>
-							<ul class="nav-second-level" aria-expanded="false">
-								<li>
-									<?= $this->Html->link(__('新規会員追加'), ['controller' => 'Users', 'action' => 'add']) ?>
-								</li>
-								<li>
-									<?= $this->Html->link(__('会員情報一覧'), ['controller' => 'Users', 'action' => 'index']) ?>
-								</li>
-							</ul>
-						</li>
-						<?php
-					}
-				?>
+				if ($this->request->session()->read('Auth.User.role') == ROLE_SYSTEM) {
+					?>
+					<li>
+						<a href="javascript: void(0);">
+							<i class="fe-users"></i>
+							<span> 会員情報 </span>
+							<span class="menu-arrow"></span>
+						</a>
+						<ul class="nav-second-level" aria-expanded="false">
+							<li>
+								<?= $this->Html->link(__('新規会員追加'), ['controller' => 'Users', 'action' => 'add']) ?>
+							</li>
+							<li>
+								<?= $this->Html->link(__('会員情報一覧'), ['controller' => 'Users', 'action' => 'index']) ?>
+							</li>
+						</ul>
+					</li>
 				<li>
 					<a href="javascript: void(0);">
 						<i class="fe-calendar"></i>
@@ -85,25 +82,23 @@
 						</li>
 					</ul>
 				</li>
+					<?php
+				}
+				?>
 				<li>
 					<a href="javascript: void(0);">
-						<i class="fe-map-pin"></i>
-						<span> カラオケ </span>
+						<i class="fe-database"></i>
+						<span> ダッシュボード </span>
 						<span class="menu-arrow"></span>
 					</a>
 					<ul class="nav-second-level" aria-expanded="false">
 						<li>
-							<?= $this->Html->link(__('新規カラオケ登録'), ['controller' => 'Stores', 'action' => 'add']) ?>
-						</li>
-						<li>
-							<?= $this->Html->link(__('カラオケ一覧'), ['controller' => 'Stores', 'action' => 'index']) ?>
-						</li>
-						<li>
-							<?= $this->Html->link(__('お気に入りカラオケ'), ['controller' => 'Stores', 'action' => 'index']) ?>
+							<?= $this->Html->link(__('トップ'), ['controller' => 'Tops', 'action' => 'index']) ?>
 						</li>
 					</ul>
 				</li>
 			</ul>
+
 
 		</div>
 		<!-- End Sidebar -->

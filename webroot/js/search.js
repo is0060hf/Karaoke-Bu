@@ -11,3 +11,9 @@ function clearSearchElementsInUser(){
 	document.getElementById( "mail_address" ).value = '';
 	document.getElementById( "role" ).selectedIndex = 0;
 }
+
+function clearEventSearchElements() {
+	document.getElementById("mail_address").value = '';
+	document.getElementById("region").selectedIndex = 0;
+	document.getElementById("prefecture").selectedIndex = 0;
+}
