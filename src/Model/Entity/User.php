@@ -14,8 +14,10 @@ use Cake\ORM\Entity;
  * @property string $introduction
  * @property int $role
  * @property bool $official_flg
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property bool $auth_flg
+ * @property string|null $uuid
+ * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime|null $created
  *
  * @property \App\Model\Entity\EventComment[] $event_comments
  * @property \App\Model\Entity\EventEntry[] $event_entries
@@ -42,8 +44,10 @@ class User extends Entity
         'introduction' => true,
         'role' => true,
         'official_flg' => true,
-        'created' => true,
+			'auth_flg' => true,
+			'uuid' => true,
         'modified' => true,
+			'created' => true,
         'event_comments' => true,
         'event_entries' => true,
         'events' => true,

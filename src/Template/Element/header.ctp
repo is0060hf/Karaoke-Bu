@@ -16,7 +16,7 @@
 				</div>
 
 				<?php
-					if ($this->request->session()->read('Auth.User.user_role') == 'システム管理者') {
+				if ($this->request->session()->read('Auth.User.user_role') == ROLE_SYSTEM) {
 						?>
 						<!-- item-->
 						<a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->session()->read('Auth.User.id')]); ?>" class="dropdown-item notify-item">
@@ -34,11 +34,36 @@
 						<?php
 					}
 				?>
-				<!-- item-->
-				<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>" class="dropdown-item notify-item">
-					<i class="fe-log-out"></i>
-					<span>ログアウト</span>
-				</a>
+				<?php
+				if ($this->request->session()->check('Auth.User')) {
+					?>
+					<a
+						href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->session()->read('Auth.User.id')]); ?>"
+						class="dropdown-item notify-item">
+						<i class="fe-user"></i>
+						<span>ユーザー情報</span>
+					</a>
+					<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"
+						 class="dropdown-item notify-item">
+						<i class="fe-log-out"></i>
+						<span>ログアウト</span>
+					</a>
+					<?php
+				} else {
+					?>
+					<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']); ?>"
+						 class="dropdown-item notify-item">
+						<i class="fe-log-out"></i>
+						<span>新規会員登録</span>
+					</a>
+					<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']); ?>"
+						 class="dropdown-item notify-item">
+						<i class="fe-log-out"></i>
+						<span>ログイン</span>
+					</a>
+					<?php
+				}
+				?>
 
 			</div>
 		</li>

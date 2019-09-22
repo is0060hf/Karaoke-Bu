@@ -2,10 +2,7 @@
 
 namespace App\Controller;
 
-use App\Util\ModelUtil;
 use Cake\Event\Event;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Settings;
 
 
 /**
@@ -128,7 +125,6 @@ class FriendsController extends AppController
 		$myUserId = $this->request->session()->read('Auth.User.id');
 
 		if($destUserId){
-
 			if ($myUserId == $destUserId) {
 				$this->Flash->error(__('自分自身とはともだち登録できません。'));
 
@@ -159,6 +155,9 @@ class FriendsController extends AppController
 				}
 			}
 		}
+
+		$url = $this->referer(array('action' => 'index'));
+		return $this->redirect($url);
 	}
 
 	/**

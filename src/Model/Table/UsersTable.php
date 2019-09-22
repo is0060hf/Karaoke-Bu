@@ -1,7 +1,6 @@
 <?php
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -112,6 +111,15 @@ class UsersTable extends Table
         $validator
             ->boolean('official_flg')
             ->notEmptyString('official_flg');
+
+			$validator
+				->boolean('auth_flg')
+				->notEmptyString('auth_flg');
+
+			$validator
+				->scalar('uuid')
+				->maxLength('uuid', 256)
+				->allowEmptyString('uuid');
 
         return $validator;
     }

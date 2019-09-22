@@ -3,9 +3,10 @@
 	 * @var \App\View\AppView                                             $this
 	 * @var \App\Model\Entity\Event[]|\Cake\Collection\CollectionInterface $events
 	 */
-	use Cake\ORM\TableRegistry;
 
-	$userList = TableRegistry::get('Users')->find()->all();
+use Cake\ORM\TableRegistry;
+
+$userList = TableRegistry::get('Users')->find()->all();
 	$usersNameList = [];
 	$usersNameList[''] = '未選択';
 	foreach ($userList as $usr) {
@@ -119,7 +120,7 @@
 		<thead>
 		<tr>
 			<th scope="col"><?= $this->Paginator->sort('title', 'タイトル') ?></th>
-			<th scope="col"><?= $this->Paginator->sort('start_date', 'イベント開始日') ?></th>
+			<th scope="col"><?= $this->Paginator->sort('start_time', 'イベント開始日') ?></th>
 			<th scope="col"><?= $this->Paginator->sort('budget', '予算') ?></th>
 			<th scope="col"><?= $this->Paginator->sort('prefecture', '開催地') ?></th>
 			<th scope="col" class="actions"><?= __('操作') ?></th>

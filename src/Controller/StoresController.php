@@ -3,13 +3,10 @@
 namespace App\Controller;
 
 use App\Util\ModelUtil;
-use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
-use Cake\Filesystem\File;
 use Cake\ORM\TableRegistry;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Settings;
-use RuntimeException;
 
 
 /**
@@ -124,254 +121,110 @@ class StoresController extends AppController
 	public function add()
 	{
 		$this->viewBuilder()->setLayout('editor_layout');
-		$team = $this->Teams->newEntity();
+		$store = $this->Stores->newEntity();
+
 		if ($this->request->is('post')) {
-			$team = $this->Teams->patchEntity($team, $this->request->getData());
+			$store = $this->Stores->patchEntity($store, $this->request->getData());
+			if ($this->Stores->save($store)) {
+				$this->Flash->success(__('店舗登録が完了しました。'));
 
-			// ファイルのアップロード処理
-			$dir = realpath(WWW_ROOT . "/upload_img");
-			$limitFileSize = 1024 * 1024;  //	画像の容量制限は1MBとする
-
-			try {
-				//カバーイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
-				if ($this->request->getData('cover_image_path')) {
-					$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, $limitFileSize);
-					$team->cover_image_path = '/upload_img/' . $uploadedFileName;
-				}
-
-				//アイコンイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
-				if ($this->request->getData('icon_image_path')) {
-					$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, $limitFileSize);
-					$team->icon_image_path = '/upload_img/' . $uploadedFileName;
-				}
-
-				// トランザクション開始
-				$connection = ConnectionManager::get('default');
-				$connection->begin();
-
-				// トピックスの投稿処理
-				if ($this->Teams->save($team)) {
-					$teamUserLinkData['user_id'] = $this->request->session()->read('Auth.User.id');
-					$teamUserLinkData['team_id'] = $team->id;
-					$teamUserLinkData['status'] = TEAM_MEMBER_STATUS_APPROVAL;
-					$teamUserLinkData['role'] = TEAM_MEMBER_ROLE_MANAGER;
-
-					//チーム登録者自身を管理者として登録する
-					$teamUserLinksTable = TableRegistry::get('TeamUserLinks');
-					$newTeamUserLink = $teamUserLinksTable->newEntity($teamUserLinkData);
-					$teamUserLinksTable->save($newTeamUserLink);
-
-					// コミット
-					$connection->commit();
-
-					$this->Flash->success(__('チームを登録しました。'));
-					return $this->redirect(array('action' => 'index'));
-				} else {
-					// ロールバック
-					$connection->rollback();
-
-					$this->Flash->error(__('入力エラーが発生しました'));
-					$this->set(compact('team'));
-					$this->render("add");
-				}
-			} catch (RuntimeException $e) {
-				$this->Flash->error(__('ファイルのアップロードができませんでした.'));
-				$this->Flash->error(__($e->getMessage()));
+				return $this->redirect(['action' => 'index']);
+			} else {
+				$this->Flash->error(__('店舗登録に失敗しました。しばらくしてからやり直してください。'));
+				$this->set(compact('store'));
 			}
+		} else {
+			$this->set(compact('store'));
 		}
-		$this->set(compact('team'));
 	}
 
 	/**
-	 * Edit method
+	 * 店舗情報を編集する機能
 	 *
-	 * @param string|null $id User id.
+	 * 権限：だれでも
+	 * ログイン要否：要
+	 * 画面遷移：店舗情報編集画面
+	 *
+	 * @param string|null $id Store id.
 	 * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
 	public function edit($id = null)
 	{
 		$this->viewBuilder()->setLayout('editor_layout');
-		$team = $this->Teams->get($id, [
+		$store = $this->Stores->get($id, [
 			'contain' => []
 		]);
+
 		if ($this->request->is(['patch', 'post', 'put'])) {
-			$team = $this->Teams->patchEntity($team, $this->request->getData());
+			$store = $this->Stores->patchEntity($store, $this->request->getData());
 
-			// ファイルのアップロード処理
-			$dir = realpath(WWW_ROOT . "/upload_img");
-			$limitFileSize = 1024 * 1024;  //	画像の容量制限は1MBとする
-
-			try {
-				//カバーイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
-				if ($this->request->getData('cover_image_path')) {
-					$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, $limitFileSize);
-					$team->cover_image_path = '/upload_img/' . $uploadedFileName;
-				}
-
-				//アイコンイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
-				if ($this->request->getData('icon_image_path')) {
-					$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, $limitFileSize);
-					$team->icon_image_path = '/upload_img/' . $uploadedFileName;
-				}
-
-				if ($this->Teams->save($team)) {
-					$this->Flash->success(__('チームを登録しました。'));
-					return $this->redirect(array('action' => 'view', $id));
-				} else {
-					$this->Flash->error(__('入力エラーが発生しました'));
-					$this->set(compact('post'));
-					$this->render("edit");
-				}
-
-			} catch (RuntimeException $e) {
-				$this->Flash->error(__('ファイルのアップロードができませんでした.'));
-				$this->Flash->error(__($e->getMessage()));
+			if ($this->Stores->save($store)) {
+				$this->Flash->success(__('店舗を登録しました。'));
+				return $this->redirect(array('action' => 'view', $id));
+			} else {
+				$this->Flash->error(__('入力エラーが発生しました'));
+				$this->set(compact('store'));
+				$this->render("edit");
 			}
 		}
-		$this->set(compact('team'));
+		$this->set(compact('store'));
 	}
 
 	/**
-	 * Delete method
+	 * 店舗情報を削除する機能
 	 *
-	 * @param string|null $id User id.
+	 * 権限：だれでも
+	 * ログイン要否：要
+	 * 画面遷移：なし
+	 *
+	 * @param string|null $id Store id.
 	 * @return \Cake\Http\Response|null Redirects to index.
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
 	public function delete($id = null)
 	{
 		$this->request->allowMethod(['post', 'delete']);
-		$team = $this->Teams->get($id);
-		if ($this->Teams->delete($team)) {
-			$this->Flash->success(__('チーム情報を削除いたしました。'));
+		$team = $this->Stores->get($id);
+		if ($this->Stores->delete($team)) {
+			$this->Flash->success(__('店舗情報を削除いたしました。'));
 		} else {
-			$this->Flash->error(__('チーム情報を削除できませんでした。'));
+			$this->Flash->error(__('店舗情報を削除できませんでした。'));
 		}
 
 		return $this->redirect(['action' => 'index']);
 	}
 
 	/**
-	 * ファイルをアップロードする処理
-	 * @param null $file
-	 * @param null $dir
-	 * @param float|int $limitFileSize
-	 * @return string
+	 * 店舗画像を追加する機能
+	 *
+	 * 権限：だれでも
+	 * ログイン要否：要
+	 * 画面遷移：なし
+	 *
+	 * @param null $storeId
 	 */
-	public function file_upload($file = null, $dir = null, $limitFileSize = 1024 * 1024)
-	{
-		try {
-			// ファイルを保存するフォルダ $dirの値のチェック
-			if ($dir) {
-				if (!file_exists($dir)) {
-					throw new RuntimeException('指定のディレクトリがありません。');
-				}
+	public function addImage($storeId = null){
+		$this->request->allowMethod(['post']);
+
+		if($storeId){
+			$storeImageEntity = TableRegistry::get('StoreImages');
+			$storeImage = $storeImageEntity->newEntity();
+			$storeImage = $storeImageEntity->patchEntity($storeImage, $this->request->getData());
+			$storeImage->store_id = $storeId;
+
+			if ($this->Friends->save($friend)) {
+				$this->Flash->success(__('ともだち登録しました。'));
+
+				$url = $this->referer(array('action' => 'index'));
+				return $this->redirect($url);
 			} else {
-				throw new RuntimeException('ディレクトリの指定がありません。');
+				$this->Flash->error(__('ともだち登録に失敗しました。しばらくしてからやり直してください。'));
+
+				$url = $this->referer(array('action' => 'index'));
+				return $this->redirect($url);
 			}
-
-			// 未定義、複数ファイル、破損攻撃のいずれかの場合は無効処理
-			if (!isset($file['error']) || is_array($file['error'])) {
-				throw new RuntimeException('Invalid parameters.');
-			}
-
-			// エラーのチェック
-			switch ($file['error']) {
-				case 0:
-					break;
-				case UPLOAD_ERR_OK:
-					break;
-				case UPLOAD_ERR_NO_FILE:
-					throw new RuntimeException('No file sent.');
-				case UPLOAD_ERR_INI_SIZE:
-				case UPLOAD_ERR_FORM_SIZE:
-					throw new RuntimeException('Exceeded filesize limit.');
-				default:
-					throw new RuntimeException('Unknown errors.');
-			}
-
-			// ファイル情報取得
-			$fileInfo = new File($file["tmp_name"]);
-
-			// ファイルサイズのチェック
-			if ($fileInfo->size() > $limitFileSize) {
-				throw new RuntimeException('ファイル容量の制限を超えています。');
-			}
-
-			// ファイルタイプのチェックし、拡張子を取得
-			if (false === $ext = array_search($fileInfo->mime(),
-					['jpg' => 'image/jpeg',
-						'png' => 'image/png',
-						'gif' => 'image/gif',],
-					true)) {
-				throw new RuntimeException('画像ファイル以外がアップロードされました。');
-			}
-
-			// ファイル名の生成
-			$uploadFile = sha1_file($file["tmp_name"]) . "." . $ext;
-
-			// ファイルの移動
-			if (!move_uploaded_file($file["tmp_name"], $dir . "/" . $uploadFile)) {
-				throw new RuntimeException('Failed to move uploaded file.');
-			}
-		} catch (RuntimeException $e) {
-			throw $e;
 		}
-		return $uploadFile;
 	}
 
-	/**
-	 * 編集画面にてカバー画像を削除するためのメソッド
-	 * @param null $id
-	 * @return mixed
-	 */
-	public function deleteCoverImage($id = null) {
-		$team = $this->Teams->get($id, [
-			'contain' => []
-		]);
-
-		if ($team->cover_image_path != '') {
-			if (file_exists ( WWW_ROOT . $team->cover_image_path )) {
-				unlink(WWW_ROOT . $team->cover_image_path);
-			}
-		}
-
-		$team->cover_image_path = null;
-		if ($this->Teams->save($team)) {
-			$this->Flash->success(__('カバー画像を削除しました。'));
-		} else {
-			$this->Flash->error(__('カバー画像の削除に失敗しました。'));
-		}
-
-		$this->set(compact('team'));
-		return $this->redirect($this->referer());
-	}
-
-	/**
-	 * 編集画面にてアイコンを削除するためのメソッド
-	 * @param null $id
-	 * @return mixed
-	 */
-	public function deleteIcon($id = null) {
-		$team = $this->Teams->get($id, [
-			'contain' => []
-		]);
-
-		if ($team->icon_image_path != '') {
-			if (file_exists ( WWW_ROOT . $team->icon_image_path )) {
-				unlink(WWW_ROOT . $team->icon_image_path);
-			}
-		}
-
-		$team->icon_image_path = null;
-		if ($this->Teams->save($team)) {
-			$this->Flash->success(__('アイコンを削除しました。'));
-		} else {
-			$this->Flash->error(__('アイコンの削除に失敗しました。'));
-		}
-
-		$this->set(compact('team'));
-		return $this->redirect($this->referer());
-	}
 }
