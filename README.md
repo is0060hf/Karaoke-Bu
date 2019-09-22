@@ -1,8 +1,4 @@
-<p align="center">
-  <a href="https://cakephp.org/" target="_blank" >
-    <img alt="カラオケ部" src="https://user-images.githubusercontent.com/4088472/65383943-ef1b9900-dd56-11e9-916e-f13495ada9e0.png" width="400" />
-  </a>
-</p>
+# カラオケ部
 
 ## 概要
 
