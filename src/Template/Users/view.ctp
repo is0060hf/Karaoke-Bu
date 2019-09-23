@@ -15,41 +15,64 @@
 </div>
 
 <div class="users view large-9 medium-8 columns content">
-	<legend>会員情報詳細</legend>
-	<table class="table mb-4">
-		<tr>
-			<th scope="row"><?= __('ログイン名') ?></th>
-			<td><?= h($user->login_name) ?></td>
-		</tr>
-		<tr>
-			<th scope="row"><?= __('パスワード') ?></th>
-			<td>セキュリティの関係で非表示</td>
-		</tr>
-		<tr>
-			<th scope="row"><?= __('メールアドレス') ?></th>
-			<td><?= h($user->mail_address) ?></td>
-		</tr>
-		<tr>
-			<th scope="row"><?= __('表示名') ?></th>
-			<td><?= h($user->nick_name) ?></td>
-		</tr>
-		<tr>
-			<th scope="row"><?= __('アカウント種別') ?></th>
-			<td><?= ROLE_NAME_ARRAY[$user->role] ?></td>
-		</tr>
-		<tr>
-			<th scope="row"><?= __('一言自己紹介文') ?></th>
-			<td><?= h($user->introduction) ?></td>
-		</tr>
-		<tr>
-			<th scope="row"><?= __('作成日') ?></th>
-			<td><?= h($user->created) ?></td>
-		</tr>
-		<tr>
-			<th scope="row"><?= __('更新日') ?></th>
-			<td><?= h($user->modified) ?></td>
-		</tr>
-	</table>
+
+	<div class="row mb-2">
+		<div class="col-12">
+			<div class="user_cover_div_wrapper">
+				<?php if (isset($user->cover_image_path)) { ?>
+					<div class="user_cover_div" style="background-image: url(<?= $user->cover_image_path ?>)">	</div>
+				<?php } else { ?>
+					<div class="user_cover_div" style="background-image: url('/assets/images/cover.png')">	</div>
+				<?php } ?>
+			</div>
+			<div class="rellax_icon" data-rellax-speed="1">
+				<?php if (isset($user->icon_image_path)) { ?>
+					<img src="<?= $user->icon_image_path ?>" alt="user-icon" class="rounded-circle">
+				<?php } else { ?>
+					<img src="/assets/images/users/avatar.png" alt="user-icon" class="rounded-circle">
+				<?php } ?>
+			</div>
+		</div>
+	</div>
+	<div class="row user_info_div pt-4" data-rellax-speed="1">
+		<div class="col-12">
+			<legend>会員情報詳細</legend>
+			<table class="table mb-4">
+				<tr>
+					<th scope="row"><?= __('ログイン名') ?></th>
+					<td><?= h($user->login_name) ?></td>
+				</tr>
+				<tr>
+					<th scope="row"><?= __('パスワード') ?></th>
+					<td>セキュリティの関係で非表示</td>
+				</tr>
+				<tr>
+					<th scope="row"><?= __('メールアドレス') ?></th>
+					<td><?= h($user->mail_address) ?></td>
+				</tr>
+				<tr>
+					<th scope="row"><?= __('表示名') ?></th>
+					<td><?= h($user->nick_name) ?></td>
+				</tr>
+				<tr>
+					<th scope="row"><?= __('アカウント種別') ?></th>
+					<td><?= ROLE_NAME_ARRAY[$user->role] ?></td>
+				</tr>
+				<tr>
+					<th scope="row"><?= __('一言自己紹介文') ?></th>
+					<td><?= h($user->introduction) ?></td>
+				</tr>
+				<tr>
+					<th scope="row"><?= __('作成日') ?></th>
+					<td><?= h($user->created) ?></td>
+				</tr>
+				<tr>
+					<th scope="row"><?= __('更新日') ?></th>
+					<td><?= h($user->modified) ?></td>
+				</tr>
+			</table>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-12 text-center">
 			<?php

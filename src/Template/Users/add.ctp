@@ -28,7 +28,8 @@
 	?>
 
 	<?= $this->Form->create($user, array(
-		'templates' => $form_template
+		'templates' => $form_template,
+		'type' => 'file'
 	)); ?>
 	<fieldset>
 		<legend><?= __('ユーザー登録') ?></legend>
@@ -115,6 +116,36 @@
 				'div_tooltip_placement' => 'top',
 				'div_tooltip_title' => '他のユーザーに公開する自己紹介分を、一言お願いしいます。'
 			),
+			'class' => 'form-control'      // inputタグのクラス名
+		));
+		echo $this->Form->control('cover_image_path', array(
+			'label' => array(
+				'text' => 'カバー画像',       // labelで出力するテキスト
+				'class' => 'col-form-label' // labelタグのクラス名
+			),
+			'type' => 'file',
+			'templateVars' => array(
+				'div_class' => 'form-group row',
+				'div_tooltip' => 'tooltip',
+				'div_tooltip_placement' => 'top',
+				'div_tooltip_title' => 'カバー画像をアップロードしてください。'
+			),
+			'id' => 'cover_image_path',
+			'class' => 'form-control'      // inputタグのクラス名
+		));
+		echo $this->Form->control('icon_image_path', array(
+			'label' => array(
+				'text' => 'アイコン',       // labelで出力するテキスト
+				'class' => 'col-form-label' // labelタグのクラス名
+			),
+			'type' => 'file',
+			'templateVars' => array(
+				'div_class' => 'form-group row',
+				'div_tooltip' => 'tooltip',
+				'div_tooltip_placement' => 'top',
+				'div_tooltip_title' => 'チームアイコンをアップロードしてください。'
+			),
+			'id' => 'icon_image_path',
 			'class' => 'form-control'      // inputタグのクラス名
 		));
 		?>

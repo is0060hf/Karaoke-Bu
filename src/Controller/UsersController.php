@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use Cake\Auth\DefaultPasswordHasher;
+use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Mailer\Email;
 use Cake\Mailer\TransportFactory;
-
+use RuntimeException;
+use Cake\Filesystem\File;
 
 /**
  * Users Controller
@@ -136,6 +138,7 @@ class UsersController extends AppController
 	 */
 	public function logout()
 	{
+		$this->request->session()->destroy();
 		return $this->redirect($this->Auth->logout());
 	}
 
@@ -244,35 +247,66 @@ class UsersController extends AppController
 		$user = $this->Users->newEntity();
 		if ($this->request->is('post')) {
 			$user = $this->Users->patchEntity($user, $this->request->getData());
-			$user->password = password_hash($user->password, PASSWORD_DEFAULT);
-			$sha_query = sha1($user->mail_address . $user->password);
-			$user->auth_flg = false;
-			$user->uuid = $sha_query;
 
-			if ($this->request->getData('password') === $this->request->getData('confirm_password')) {
-				if ($this->Users->save($user)) {
-					TransportFactory::setConfig('mailtrap', [
-						'host' => 'smtp.mailtrap.io',
-						'port' => 2525,
-						'username' => '294cde5d2866a3',
-						'password' => '0553a77e71612a',
-						'className' => 'Smtp'
-					]);
-					$email = new Email('default');
-					$email_body = AUTH_MAIL_BODY;
-					$one_time_url = 'http://localhost:8000/users/auth?query=' . $sha_query;
-					$email_body = str_replace("{{_$1_}}", $user->nick_name, $email_body);
-					$email_body = str_replace("{{_$2_}}", $one_time_url, $email_body);
-					$email->from([MAIL_FROM_ADDRESS => MAIL_FROM_NAME])
-						->to($user->mail_address)
-						->subject(AUTH_MAIL_TITLE)
-						->send($email_body);
+			// ファイルのアップロード処理
+			$dir = realpath(WWW_ROOT . "/upload_img");
+			$limitFileSize = 1024 * 1024;  //	画像の容量制限は1MBとする
 
-					$this->Flash->success(__('ご登録ありがとうございました。'));
-					return $this->redirect(['controller' => 'pages', 'action' => 'complete_user_registration']);
+			try {
+				//カバーイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
+				if ($this->request->getData('cover_image_path')) {
+					$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, $limitFileSize);
+					$user->cover_image_path = '/upload_img/' . $uploadedFileName;
 				}
-			} else {
-				$this->Flash->error(__('パスワードと確認用パスワードが一致しません。'));
+
+				//アイコンイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
+				if ($this->request->getData('icon_image_path')) {
+					$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, $limitFileSize);
+					$user->icon_image_path = '/upload_img/' . $uploadedFileName;
+				}
+
+				$user->password = password_hash($user->password, PASSWORD_DEFAULT);
+				$sha_query = sha1($user->mail_address . $user->password);
+				$user->auth_flg = false;
+				$user->uuid = $sha_query;
+
+				if ($this->request->getData('password') === $this->request->getData('confirm_password')) {
+					// トランザクション開始
+					$connection = ConnectionManager::get('default');
+					$connection->begin();
+
+					if ($this->Users->save($user)) {
+						TransportFactory::setConfig('mailtrap', [
+							'host' => 'smtp.mailtrap.io',
+							'port' => 2525,
+							'username' => '294cde5d2866a3',
+							'password' => '0553a77e71612a',
+							'className' => 'Smtp'
+						]);
+						$email = new Email('default');
+						$email_body = AUTH_MAIL_BODY;
+						$one_time_url = 'http://localhost:8000/users/auth?query=' . $sha_query;
+						$email_body = str_replace("{{_$1_}}", $user->nick_name, $email_body);
+						$email_body = str_replace("{{_$2_}}", $one_time_url, $email_body);
+						$email->from([MAIL_FROM_ADDRESS => MAIL_FROM_NAME])
+							->to($user->mail_address)
+							->subject(AUTH_MAIL_TITLE)
+							->send($email_body);
+
+						$connection->commit();
+
+						$this->Flash->success(__('ご登録ありがとうございました。'));
+						return $this->redirect(['controller' => 'pages', 'action' => 'complete_user_registration']);
+					} else {
+						$connection->rollback();
+						$this->Flash->error(__('ユーザー登録中に予期しないエラーが発生しました。'));
+					}
+				} else {
+					$this->Flash->error(__('パスワードと確認用パスワードが一致しません。'));
+				}
+			} catch (RuntimeException $e) {
+				$this->Flash->error(__('ファイルのアップロードができませんでした.'));
+				$this->Flash->error(__($e->getMessage()));
 			}
 		}
 		$this->set(compact('user'));
@@ -294,11 +328,42 @@ class UsersController extends AppController
 		]);
 		if ($this->request->is(['patch', 'post', 'put'])) {
 			$user = $this->Users->patchEntity($user, $this->request->getData());
-			if ($this->Users->save($user)) {
-				$this->Flash->success(__('会員情報を正常に更新致しました。'));
-				return $this->redirect(['action' => 'view', $user->id]);
+
+			// ファイルのアップロード処理
+			$dir = realpath(WWW_ROOT . "/upload_img");
+			$limitFileSize = 1024 * 1024;  //	画像の容量制限は1MBとする
+
+			try {
+				//カバーイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
+				if ($this->request->getData('cover_image_path')) {
+					$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, $limitFileSize);
+					$user->cover_image_path = '/upload_img/' . $uploadedFileName;
+				}
+
+				//アイコンイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
+				if ($this->request->getData('icon_image_path')) {
+					$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, $limitFileSize);
+					$user->icon_image_path = '/upload_img/' . $uploadedFileName;
+				}
+
+				// トランザクション開始
+				$connection = ConnectionManager::get('default');
+				$connection->begin();
+
+				if ($this->Users->save($user)) {
+					$connection->commit();
+
+					$this->Flash->success(__('会員情報を正常に更新致しました。'));
+					return $this->redirect(['action' => 'view', $user->id]);
+				} else {
+					$connection->rollback();
+					$this->Flash->error(__('ユーザー登録中に予期しないエラーが発生しました。'));
+				}
+
+			} catch (RuntimeException $e) {
+				$this->Flash->error(__('ファイルのアップロードができませんでした.'));
+				$this->Flash->error(__($e->getMessage()));
 			}
-			$this->Flash->error(__('会員情報を更新できませんでした。'));
 		}
 		$this->set(compact('user'));
 		return null;
@@ -362,6 +427,72 @@ class UsersController extends AppController
 		return null;
 	}
 
+	public function file_upload($file = null, $dir = null, $limitFileSize = 1024 * 1024) {
+		try {
+			// ファイルを保存するフォルダ $dirの値のチェック
+			if ($dir) {
+				if (!file_exists($dir)) {
+					throw new RuntimeException('指定のディレクトリがありません。');
+				}
+			} else {
+				throw new RuntimeException('ディレクトリの指定がありません。');
+			}
+
+			// 未定義、複数ファイル、破損攻撃のいずれかの場合は無効処理
+			if (!isset($file['error']) || is_array($file['error'])) {
+				throw new RuntimeException('Invalid parameters.');
+			}
+
+			// エラーのチェック
+			switch ($file['error']) {
+				case 0:
+					break;
+				case UPLOAD_ERR_OK:
+					break;
+				case UPLOAD_ERR_NO_FILE:
+					throw new RuntimeException('No file sent.');
+				case UPLOAD_ERR_INI_SIZE:
+				case UPLOAD_ERR_FORM_SIZE:
+					throw new RuntimeException('Exceeded filesize limit.');
+				default:
+					throw new RuntimeException('Unknown errors.');
+			}
+
+			// ファイル情報取得
+			$fileInfo = new File($file["tmp_name"]);
+
+			// ファイルサイズのチェック
+			if ($fileInfo->size() > $limitFileSize) {
+				throw new RuntimeException('Exceeded filesize limit.');
+			}
+
+			// ファイルタイプのチェックし、拡張子を取得
+			if (false === $ext = array_search($fileInfo->mime(),
+					['jpg' => 'image/jpeg',
+						'png' => 'image/png',
+						'gif' => 'image/gif',],
+					true)) {
+				throw new RuntimeException('画像ファイル以外がアップロードされました。');
+			}
+
+			// ファイル名の生成
+//            $uploadFile = $file["name"] . "." . $ext;
+			$uploadFile = sha1_file($file["tmp_name"]) . "." . $ext;
+
+			// ファイルの移動
+			if (!move_uploaded_file($file["tmp_name"], $dir . "/" . $uploadFile)) {
+				throw new RuntimeException('Failed to move uploaded file.');
+			}
+
+			// 処理を抜けたら正常終了
+//            echo 'File is uploaded successfully.';
+
+		} catch (RuntimeException $e) {
+			throw $e;
+		}
+		return $uploadFile;
+	}
+
 	/**
 	 * 退会処理を行う為のメソッド
 	 *
@@ -416,5 +547,65 @@ class UsersController extends AppController
 		}
 
 		return $this->redirect(['action' => 'index']);
+	}
+
+	/**
+	 * 編集画面にてアイコン画像を削除するためのメソッド
+	 *
+	 * @param null $id
+	 * @return mixed
+	 *
+	 * 権限：誰でも
+	 * ログイン要否：要
+	 * 画面遷移：なし
+	 */
+	public function deleteIconImageOnEdit($id = null) {
+		$user = $this->Users->get($id);
+
+		if ($user->icon_image_path != '') {
+			if (file_exists ( $user->icon_image_path)) {
+				unlink(WWW_ROOT . $user->icon_image_path);
+			}
+		}
+
+		$user->icon_image_path = null;
+		if ($this->Users->save($user)) {
+			$this->Flash->success(__('アイコン画像を削除しました。'));
+		} else {
+			$this->Flash->error(__('アイコン画像の削除に失敗しました。'));
+		}
+
+		$this->set(compact('user'));
+		return $this->redirect($this->referer());
+	}
+
+	/**
+	 * 編集画面にてカバー画像を削除するためのメソッド
+	 *
+	 * @param null $id
+	 * @return mixed
+	 *
+	 * 権限：誰でも
+	 * ログイン要否：要
+	 * 画面遷移：なし
+	 */
+	public function deleteCoverImageOnEdit($id = null) {
+		$user = $this->Users->get($id);
+
+		if ($user->cover_image_path != '') {
+			if (file_exists ( $user->cover_image_path)) {
+				unlink(WWW_ROOT . $user->cover_image_path);
+			}
+		}
+
+		$user->cover_image_path = null;
+		if ($this->Users->save($user)) {
+			$this->Flash->success(__('カバー画像を削除しました。'));
+		} else {
+			$this->Flash->error(__('カバー画像の削除に失敗しました。'));
+		}
+
+		$this->set(compact('user'));
+		return $this->redirect($this->referer());
 	}
 }

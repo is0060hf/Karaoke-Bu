@@ -67,5 +67,12 @@
 <script src="/js/vendor/jquery.knob.min.js"></script>
 <script src="/js/vendor/dropzone.min.js"></script>
 
+<script src="/js/rellax.min.js"></script>
+
+<script type="text/javascript">
+	var rellax = new Rellax('.rellax_icon');
+	var rellax2 = new Rellax('.user_info_div');
+	var rellax3 = new Rellax('.user_cover_div_wrapper');
+</script>
 </body>
 </html>

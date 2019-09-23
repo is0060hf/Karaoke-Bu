@@ -4,9 +4,13 @@
 
 		<li class="dropdown notification-list">
 			<a class="nav-link dropdown-toggle nav-user mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-				<img src="/assets/images/users/avatar.png" alt="user-image" class="rounded-circle">
+				<?php if ($this->request->session()->read('Auth.User.icon_image_path')) { ?>
+					<img src="<?= $this->request->session()->read('Auth.User.icon_image_path') ?>" alt="user-icon" class="rounded-circle">
+				<?php } else { ?>
+					<img src="/assets/images/users/avatar.png" alt="user-icon" class="rounded-circle">
+				<?php } ?>
 				<small class="pro-user-name ml-1">
-					<?= $this->request->session()->read('Auth.User.username'); ?>
+					<?php $this->request->session()->read('Auth.User.nick_name'); ?>
 				</small>
 			</a>
 			<div class="dropdown-menu dropdown-menu-right dropdown-menu-animated profile-dropdown ">

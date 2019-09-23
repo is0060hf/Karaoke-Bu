@@ -31,7 +31,8 @@
 	?>
 
 	<?= $this->Form->create($user, array(
-		'templates' => $form_template
+		'templates' => $form_template,
+		'type' => 'file'
 	)); ?>
 	<fieldset>
 		<legend><?= __('会員情報編集') ?></legend>
@@ -92,6 +93,70 @@
 			),
 			'class' => 'form-control'      // inputタグのクラス名
 		));
+		$cover_image_path = $user->cover_image_path;
+		if(isset($cover_image_path)){
+			echo '
+        	<div class="input form-group row">
+        	  <div class="col-sm-2">
+        	    <label class="col-form-label" for="featured_image">カバー画像</label>
+        	  </div>
+        	  <div class="col-sm-8">
+        	    <img src="'.$cover_image_path.'" width="100%">  
+						</div>
+						<div class="col-sm-2">
+        	    '.$this->Form->postLink(__('削除'), ['action' => 'deleteCoverImageOnEdit', $user->id], ['block' => true, 'confirm' => __('本当に画像を削除してもよろしいでしょうか?'), 'class' => 'btn btn-danger']).'
+        	  </div>
+        	</div>
+        	';
+		}else{
+			echo $this->Form->control('cover_image_path', array(
+				'label' => array(
+					'text' => 'カバー画像',       // labelで出力するテキスト
+					'class' => 'col-form-label' // labelタグのクラス名
+				),
+				'type' => 'file',
+				'templateVars' => array(
+					'div_class' => 'form-group row',
+					'div_tooltip' => 'tooltip',
+					'div_tooltip_placement' => 'top',
+					'div_tooltip_title' => 'カバー画像をアップロードしてください。'
+				),
+				'id' => 'cover_image_path',
+				'class' => 'form-control'      // inputタグのクラス名
+			));
+		}
+		$icon_image_path = $user->cover_image_path;
+		if(isset($icon_image_path)){
+			echo '
+        	<div class="input form-group row">
+        	  <div class="col-sm-2">
+        	    <label class="col-form-label" for="featured_image">カバー画像</label>
+        	  </div>
+        	  <div class="col-sm-8">
+        	    <img src="'.$icon_image_path.'" width="100%">  
+						</div>
+						<div class="col-sm-2">
+        	    '.$this->Form->postLink(__('削除'), ['action' => 'deleteIconImageOnEdit', $user->id], ['block' => true, 'confirm' => __('本当に画像を削除してもよろしいでしょうか?'), 'class' => 'btn btn-danger']).'
+        	  </div>
+        	</div>
+        	';
+		}else{
+			echo $this->Form->control('icon_image_path', array(
+				'label' => array(
+					'text' => 'アイコン',       // labelで出力するテキスト
+					'class' => 'col-form-label' // labelタグのクラス名
+				),
+				'type' => 'file',
+				'templateVars' => array(
+					'div_class' => 'form-group row',
+					'div_tooltip' => 'tooltip',
+					'div_tooltip_placement' => 'top',
+					'div_tooltip_title' => 'チームアイコンをアップロードしてください。'
+				),
+				'id' => 'icon_image_path',
+				'class' => 'form-control'      // inputタグのクラス名
+			));
+		}
 		?>
 	</fieldset>
 	<div class="row mt-4">
