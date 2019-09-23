@@ -16,6 +16,8 @@ use Cake\ORM\Entity;
  * @property bool $official_flg
  * @property bool $auth_flg
  * @property string|null $uuid
+ * @property string|null $icon_image_path
+ * @property string|null $cover_image_path
  * @property \Cake\I18n\FrozenTime $modified
  * @property \Cake\I18n\FrozenTime|null $created
  *
@@ -44,10 +46,12 @@ class User extends Entity
         'introduction' => true,
         'role' => true,
         'official_flg' => true,
-			'auth_flg' => true,
-			'uuid' => true,
+        'auth_flg' => true,
+        'uuid' => true,
+        'icon_image_path' => true,
+        'cover_image_path' => true,
         'modified' => true,
-			'created' => true,
+        'created' => true,
         'event_comments' => true,
         'event_entries' => true,
         'events' => true,
