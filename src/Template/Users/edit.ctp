@@ -98,7 +98,7 @@
 			echo '
         	<div class="input form-group row">
         	  <div class="col-sm-2">
-        	    <label class="col-form-label" for="featured_image">カバー画像</label>
+        	    <label class="col-form-label" for="cover_image_path">カバー画像</label>
         	  </div>
         	  <div class="col-sm-8">
         	    <img src="'.$cover_image_path.'" width="100%">  
@@ -125,12 +125,12 @@
 				'class' => 'form-control'      // inputタグのクラス名
 			));
 		}
-		$icon_image_path = $user->cover_image_path;
+		$icon_image_path = $user->icon_image_path;
 		if(isset($icon_image_path)){
 			echo '
         	<div class="input form-group row">
         	  <div class="col-sm-2">
-        	    <label class="col-form-label" for="featured_image">カバー画像</label>
+        	    <label class="col-form-label" for="featured_image">アイコン</label>
         	  </div>
         	  <div class="col-sm-8">
         	    <img src="'.$icon_image_path.'" width="100%">  

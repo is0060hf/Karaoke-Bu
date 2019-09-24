@@ -15,7 +15,6 @@
 </div>
 
 <div class="users view large-9 medium-8 columns content">
-
 	<div class="row mb-2">
 		<div class="col-12">
 			<div class="user_cover_div_wrapper">

@@ -114,19 +114,30 @@ class TeamsController extends AppController
 
 			// ファイルのアップロード処理
 			$dir = realpath(WWW_ROOT . "/upload_img");
-			$limitFileSize = 1024 * 1024;  //	画像の容量制限は1MBとする
 
 			try {
 				//カバーイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
-				if ($this->request->getData('cover_image_path')) {
-					$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, $limitFileSize);
-					$team->cover_image_path = '/upload_img/' . $uploadedFileName;
+				$cover_image_path = $this->request->getData('cover_image_path');
+				// nullの場合は既に画像があってフォームが表示されていない場合なので何もしない
+				if (!is_null($cover_image_path)) {
+					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
+					if ($cover_image_path['tmp_name'] != '') {
+						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, UPLOAD_COVER_IMAGE_CAPACITY);
+						$team->cover_image_path = '/upload_img/' . $uploadedFileName;
+					} else {
+						$team->cover_image_path = null;
+					}
 				}
 
-				//アイコンイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
-				if ($this->request->getData('icon_image_path')) {
-					$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, $limitFileSize);
-					$team->icon_image_path = '/upload_img/' . $uploadedFileName;
+				// アイコンイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
+				$icon_image_path = $this->request->getData('icon_image_path');
+				if (!is_null($icon_image_path)) {
+					if ($icon_image_path['tmp_name'] != '') {
+						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, UPLOAD_ICON_IMAGE_CAPACITY);
+						$team->icon_image_path = '/upload_img/' . $uploadedFileName;
+					} else {
+						$team->icon_image_path = null;
+					}
 				}
 
 				// トランザクション開始
@@ -184,19 +195,30 @@ class TeamsController extends AppController
 
 			// ファイルのアップロード処理
 			$dir = realpath(WWW_ROOT . "/upload_img");
-			$limitFileSize = 1024 * 1024;  //	画像の容量制限は1MBとする
 
 			try {
 				//カバーイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
-				if ($this->request->getData('cover_image_path')) {
-					$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, $limitFileSize);
-					$team->cover_image_path = '/upload_img/' . $uploadedFileName;
+				$cover_image_path = $this->request->getData('cover_image_path');
+				// nullの場合は既に画像があってフォームが表示されていない場合なので何もしない
+				if (!is_null($cover_image_path)) {
+					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
+					if ($cover_image_path['tmp_name'] != '') {
+						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, UPLOAD_COVER_IMAGE_CAPACITY);
+						$team->cover_image_path = '/upload_img/' . $uploadedFileName;
+					} else {
+						$team->cover_image_path = null;
+					}
 				}
 
-				//アイコンイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
-				if ($this->request->getData('icon_image_path')) {
-					$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, $limitFileSize);
-					$team->icon_image_path = '/upload_img/' . $uploadedFileName;
+				// アイコンイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
+				$icon_image_path = $this->request->getData('icon_image_path');
+				if (!is_null($icon_image_path)) {
+					if ($icon_image_path['tmp_name'] != '') {
+						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, UPLOAD_ICON_IMAGE_CAPACITY);
+						$team->icon_image_path = '/upload_img/' . $uploadedFileName;
+					} else {
+						$team->icon_image_path = null;
+					}
 				}
 
 				if ($this->Teams->save($team)) {
@@ -286,6 +308,7 @@ class TeamsController extends AppController
 			// ファイルタイプのチェックし、拡張子を取得
 			if (false === $ext = array_search($fileInfo->mime(),
 					['jpg' => 'image/jpeg',
+						'jpeg' => 'image/jpeg',
 						'png' => 'image/png',
 						'gif' => 'image/gif',],
 					true)) {
