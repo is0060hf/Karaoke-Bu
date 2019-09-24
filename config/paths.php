@@ -359,6 +359,12 @@ define('REGION_PREFECTURE_MAPPING', [
 	]
 ]);
 
+// カバー画像のアップロード制限は10MBとする
+define('UPLOAD_COVER_IMAGE_CAPACITY', 10000000);
+
+// アイコン画像のアップロード制限は1MBとする
+define('UPLOAD_ICON_IMAGE_CAPACITY', 1000000);
+
 define('MAIL_FROM_ADDRESS', 'info@taylormode.co.jp');
 define('MAIL_FROM_NAME', 'カラオケ部');
 
