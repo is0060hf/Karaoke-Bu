@@ -151,13 +151,16 @@
 </script>
 <script type="text/javascript">
 	$(document).ready(function () {
-		if ($('#region').length) {
+		if ($('#region').val() !== -1) {
 			$('#region').trigger('change');
+		} else {
+			$('#prefecture').prop('disabled', true);
 		}
 	});
 
 	$('#region').on('change', function () {
 		const region = $(this).val();
+		const prefecture = $('#prefecture').val();
 		$.ajax({
 			url: "<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'ajaxGetPrefecture']); ?>",
 			type: 'get',
@@ -176,12 +179,11 @@
 					$('#prefecture').prop('disabled', false);
 				}
 
-				for (const prefecture in data.result) {
-					const prefectureParam = getParam('prefecture');
-					if (prefectureParam === data.result[prefecture]['prefectureCode']) {
-						$('#prefecture').append($('<option>').text(data.result[prefecture]['prefectureValue']).attr('value', data.result[prefecture]['prefectureCode']).prop('selected', true));
+				for (const element in data.result) {;
+					if (prefecture === data.result[element]['prefectureCode']) {
+						$('#prefecture').append($('<option>').text(data.result[element]['prefectureValue']).attr('value', data.result[element]['prefectureCode']).prop('selected', true));
 					} else {
-						$('#prefecture').append($('<option>').text(data.result[prefecture]['prefectureValue']).attr('value', data.result[prefecture]['prefectureCode']));
+						$('#prefecture').append($('<option>').text(data.result[element]['prefectureValue']).attr('value', data.result[element]['prefectureCode']));
 					}
 				}
 			})

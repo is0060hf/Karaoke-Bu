@@ -132,6 +132,14 @@ class UsersTable extends Table
             ->maxLength('cover_image_path', 512)
             ->allowEmptyFile('cover_image_path');
 
+        $validator
+            ->integer('region')
+            ->allowEmptyString('region');
+
+        $validator
+            ->integer('prefecture')
+            ->allowEmptyString('prefecture');
+
         return $validator;
     }
 

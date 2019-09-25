@@ -54,7 +54,7 @@ class UsersController extends AppController
 		}
 
 		// 本人のみ許可するアクション(各アクションで処理)
-		if (in_array($this->request->getParam('action'), ['passwordUpdate', 'unsubscribe'])) {
+		if (in_array($this->request->getParam('action'), ['passwordUpdate', 'unsubscribe', 'edit'])) {
 			return true;
 		}
 
@@ -333,6 +333,11 @@ class UsersController extends AppController
 	 */
 	public function edit($id = null)
 	{
+		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM && $this->request->session()->read('Auth.User.id') != $id) {
+			$this->Flash->error(__('ご指定の操作は権限がありません。'));
+			return $this->redirect(['controller' => 'pages', 'action' => 'error_user_roll']);
+		}
+
 		$this->viewBuilder()->setLayout('editor_layout');
 		$user = $this->Users->get($id, [
 			'contain' => []
