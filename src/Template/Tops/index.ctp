@@ -92,7 +92,7 @@ foreach ($userList as $usr) {
 									'class' => 'col-form-label' // labelタグのクラス名
 								),
 								'type' => 'select',
-								'options' => REGION_PREFECTURE_MAPPING[$paramRegion],
+								'options' => PREFECTURE_ARRAY,
 								'templateVars' => array(
 									'div_class' => 'form-group row',
 									'div_tooltip' => 'tooltip',

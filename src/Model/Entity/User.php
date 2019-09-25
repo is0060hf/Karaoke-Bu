@@ -18,6 +18,8 @@ use Cake\ORM\Entity;
  * @property string|null $uuid
  * @property string|null $icon_image_path
  * @property string|null $cover_image_path
+ * @property int|null $region
+ * @property int|null $prefecture
  * @property \Cake\I18n\FrozenTime $modified
  * @property \Cake\I18n\FrozenTime|null $created
  *
@@ -50,6 +52,8 @@ class User extends Entity
         'uuid' => true,
         'icon_image_path' => true,
         'cover_image_path' => true,
+        'region' => true,
+        'prefecture' => true,
         'modified' => true,
         'created' => true,
         'event_comments' => true,

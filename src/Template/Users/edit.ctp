@@ -93,6 +93,39 @@
 			),
 			'class' => 'form-control'      // inputタグのクラス名
 		));
+		echo $this->Form->control('region', array(
+			'label' => array(
+				'text' => '地域',       // labelで出力するテキスト
+				'class' => 'col-form-label' // labelタグのクラス名
+			),
+			'type' => 'select',
+			'options' => REGION_ARRAY,
+			'templateVars' => array(
+				'div_class' => 'form-group row',
+				'div_tooltip' => 'tooltip',
+				'div_tooltip_placement' => 'top',
+				'div_tooltip_title' => '住んでいる地域を選択してください。'
+			),
+			'id' => 'region',
+			'class' => 'form-control'      // inputタグのクラス名
+		));
+		echo $this->Form->control('prefecture', array(
+			'label' => array(
+				'text' => '都道府県',       // labelで出力するテキスト
+				'class' => 'col-form-label' // labelタグのクラス名
+			),
+			'type' => 'select',
+			'options' => PREFECTURE_ARRAY,
+			'templateVars' => array(
+				'div_class' => 'form-group row',
+				'div_tooltip' => 'tooltip',
+				'div_tooltip_placement' => 'top',
+				'div_tooltip_title' => '住んでいる都道府県を選択してください。'
+			),
+			'id' => 'prefecture',
+			'value' => $user->prefecture,
+			'class' => 'form-control',      // inputタグのクラス名
+		));
 		$cover_image_path = $user->cover_image_path;
 		if(isset($cover_image_path)){
 			echo '
