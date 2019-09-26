@@ -8,12 +8,14 @@
 	<div class="col-6 breadcrumb_div">
 		<ol class="breadcrumb m-b-20">
 			<li class="breadcrumb-item"><a
-					href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">Home</a></li>
+					href="<?php echo $this->Url->build(['controller' => 'Users',
+						'action' => 'index']); ?>">Home</a></li>
 			<li class="breadcrumb-item active">会員情報一覧</li>
 		</ol>
 	</div>
 	<div class="col-2 offset-4 text-right">
-		<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']); ?>" class="btn btn-success mt-2">
+		<a href="<?= $this->Url->build(['controller' => 'Users',
+			'action' => 'add']); ?>" class="btn btn-success mt-2">
 			<i class="fe-git-pull-request"></i>
 			<span>新規登録する</span>
 		</a>
@@ -38,15 +40,19 @@
 		<?php foreach ($users as $user): ?>
 			<tr>
 				<td class="align-middle"><a
-						href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'view', $user->id]); ?>"
+						href="<?php echo $this->Url->build(['controller' => 'Users',
+							'action' => 'view',
+							$user->id]); ?>"
 						class="btn btn-info"><?= h($user->username) ?></a></td>
 				<td class="align-middle"><?= h($user->mail_address) ?></td>
 				<td class="align-middle"><?= h($user->user_role) ?></td>
 				<td class="align-middle"><?= h($user->created) ?></td>
 				<td class="align-middle"><?= h($user->modified) ?></td>
 				<td class="align-middle actions">
-					<?= $this->Html->link(__('編集'), ['action' => 'edit', $user->id]) ?>
-					<?= $this->Form->postLink(__('削除'), ['action' => 'delete', $user->id], ['confirm' => __('本当に削除してもよろしいでしょうか # {0}?', $user->id)]) ?>
+					<?= $this->Html->link(__('編集'), ['action' => 'edit',
+						$user->id]) ?>
+					<?= $this->Form->postLink(__('削除'), ['action' => 'delete',
+						$user->id], ['confirm' => __('本当に削除してもよろしいでしょうか # {0}?', $user->id)]) ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>

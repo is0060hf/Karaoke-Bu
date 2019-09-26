@@ -29,8 +29,7 @@ use Cake\View\Exception\MissingTemplateException;
  * @property string layout
  * @link https://book.cakephp.org/3.0/en/controllers/pages-controller.html
  */
-class PagesController extends AppController
-{
+class PagesController extends AppController {
 	/**
 	 * ログインしていなくてもアクセスできるページを定義する
 	 * 基本的に、ログアウトのみ
@@ -38,14 +37,12 @@ class PagesController extends AppController
 	 * @param Event $event
 	 * @return \Cake\Http\Response|null|void
 	 */
-	public function beforeFilter(Event $event)
-	{
+	public function beforeFilter(Event $event) {
 		parent::beforeFilter($event);
 		$this->Auth->allow(['display']);
 	}
 
-	public function isAuthorized($user)
-	{
+	public function isAuthorized($user) {
 		if (in_array($this->request->getParam('action'), ['display'])) {
 			return true;
 		}
@@ -62,8 +59,7 @@ class PagesController extends AppController
 	 * @throws \Cake\Http\Exception\NotFoundException When the view file could not
 	 *   be found or \Cake\View\Exception\MissingTemplateException in debug mode.
 	 */
-	public function display(...$path)
-	{
+	public function display(...$path) {
 		switch ($path[0]) {
 			case 'thanks':
 				$this->layout = 'my_error_layout';

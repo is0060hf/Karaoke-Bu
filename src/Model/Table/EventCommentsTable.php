@@ -23,16 +23,14 @@ use Cake\Validation\Validator;
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class EventCommentsTable extends Table
-{
+class EventCommentsTable extends Table {
 	/**
 	 * Initialize method
 	 *
 	 * @param array $config The configuration for the Table.
 	 * @return void
 	 */
-	public function initialize(array $config)
-	{
+	public function initialize(array $config) {
 		parent::initialize($config);
 
 		$this->setTable('event_comments');
@@ -41,8 +39,10 @@ class EventCommentsTable extends Table
 
 		$this->addBehavior('Timestamp');
 
-		$this->belongsTo('Events', ['foreignKey' => 'event_id', 'joinType' => 'INNER']);
-		$this->belongsTo('Users', ['foreignKey' => 'user_id', 'joinType' => 'INNER']);
+		$this->belongsTo('Events', ['foreignKey' => 'event_id',
+			'joinType' => 'INNER']);
+		$this->belongsTo('Users', ['foreignKey' => 'user_id',
+			'joinType' => 'INNER']);
 	}
 
 	/**
@@ -51,8 +51,7 @@ class EventCommentsTable extends Table
 	 * @param \Cake\Validation\Validator $validator Validator instance.
 	 * @return \Cake\Validation\Validator
 	 */
-	public function validationDefault(Validator $validator)
-	{
+	public function validationDefault(Validator $validator) {
 		$validator->integer('id')->allowEmptyString('id', null, 'create');
 
 		$validator->scalar('context')->maxLength('context', 4294967295)->requirePresence('context', 'create')
@@ -68,8 +67,7 @@ class EventCommentsTable extends Table
 	 * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
 	 * @return \Cake\ORM\RulesChecker
 	 */
-	public function buildRules(RulesChecker $rules)
-	{
+	public function buildRules(RulesChecker $rules) {
 		$rules->add($rules->existsIn(['event_id'], 'Events'));
 		$rules->add($rules->existsIn(['user_id'], 'Users'));
 

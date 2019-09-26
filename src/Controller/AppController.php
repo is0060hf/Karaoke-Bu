@@ -26,8 +26,7 @@ use Cake\Event\Event;
  *
  * @link https://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
-class AppController extends Controller
-{
+class AppController extends Controller {
 	public $helpers = ['Paginator' => ['templates' => 'paginator-templates']];
 
 	/**
@@ -40,8 +39,7 @@ class AppController extends Controller
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function initialize()
-	{
+	public function initialize() {
 		parent::initialize();
 
 		/*			$this->loadComponent('RequestHandler', [
@@ -50,7 +48,15 @@ class AppController extends Controller
 
 		$this->loadComponent('Flash');
 
-		$this->loadComponent('Auth', ['authorize' => ['Controller'], 'authError' => 'ログインしてください。', 'storage' => 'Session', 'loginRedirect' => ['controller' => 'Tops', 'action' => 'index'], 'logoutRedirect' => ['controller' => 'Users', 'action' => 'login'], 'unauthorizedRedirect' => ['controller' => 'Users', 'action' => 'forbidden']]);
+		$this->loadComponent('Auth', ['authorize' => ['Controller'],
+			'authError' => 'ログインしてください。',
+			'storage' => 'Session',
+			'loginRedirect' => ['controller' => 'Tops',
+				'action' => 'index'],
+			'logoutRedirect' => ['controller' => 'Users',
+				'action' => 'login'],
+			'unauthorizedRedirect' => ['controller' => 'Users',
+				'action' => 'forbidden']]);
 		/*
 		 * Enable the following component for recommended CakePHP security settings.
 		 * see https://book.cakephp.org/3.0/en/controllers/components/security.html
@@ -63,8 +69,7 @@ class AppController extends Controller
 	 * @param $user
 	 * @return bool
 	 */
-	public function isAuthorized($user)
-	{
+	public function isAuthorized($user) {
 		error_log(print_r($user, true), "3", ROOT."/logs/debug.log");
 
 		/*// 管理者はすべての操作にアクセスできます
@@ -81,8 +86,7 @@ class AppController extends Controller
 	 * @param Event $event
 	 * @return \Cake\Http\Response|null|void
 	 */
-	public function beforeFilter(Event $event)
-	{
+	public function beforeFilter(Event $event) {
 		//			$this->Auth->allow(['index', 'view', 'display']);
 		$this->Auth->deny();
 	}

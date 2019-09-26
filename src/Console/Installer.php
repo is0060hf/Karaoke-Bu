@@ -27,13 +27,19 @@ use Exception;
  * Provides installation hooks for when this application is installed via
  * composer. Customize this class to suit your needs.
  */
-class Installer
-{
+class Installer {
 
 	/**
 	 * An array of directories to be made writable
 	 */
-	const WRITABLE_DIRS = ['logs', 'tmp', 'tmp/cache', 'tmp/cache/models', 'tmp/cache/persistent', 'tmp/cache/views', 'tmp/sessions', 'tmp/tests'];
+	const WRITABLE_DIRS = ['logs',
+		'tmp',
+		'tmp/cache',
+		'tmp/cache/models',
+		'tmp/cache/persistent',
+		'tmp/cache/views',
+		'tmp/sessions',
+		'tmp/tests'];
 
 	/**
 	 * Does some routine installation tasks so people don't have to.
@@ -42,8 +48,7 @@ class Installer
 	 * @throws \Exception Exception raised by validator.
 	 * @return void
 	 */
-	public static function postInstall(Event $event)
-	{
+	public static function postInstall(Event $event) {
 		$io = $event->getIO();
 
 		$rootDir = dirname(dirname(__DIR__));
@@ -54,14 +59,19 @@ class Installer
 		// ask if the permissions should be changed
 		if ($io->isInteractive()) {
 			$validator = function ($arg) {
-				if (in_array($arg, ['Y', 'y', 'N', 'n'])) {
+				if (in_array($arg, ['Y',
+					'y',
+					'N',
+					'n'])) {
 					return $arg;
 				}
 				throw new Exception('This is not a valid answer. Please choose Y or n.');
 			};
-			$setFolderPermissions = $io->askAndValidate('<info>Set Folder Permissions ? (Default to Y)</info> [<comment>Y,n</comment>]? ', $validator, 10, 'Y');
+			$setFolderPermissions = $io->askAndValidate('<info>Set Folder Permissions ? (Default to Y)</info> [<comment>Y,n</comment>]? ',
+				$validator, 10, 'Y');
 
-			if (in_array($setFolderPermissions, ['Y', 'y'])) {
+			if (in_array($setFolderPermissions, ['Y',
+				'y'])) {
 				static::setFolderPermissions($rootDir, $io);
 			}
 		} else {
@@ -83,8 +93,7 @@ class Installer
 	 * @param \Composer\IO\IOInterface $io IO interface to write to console.
 	 * @return void
 	 */
-	public static function createAppConfig($dir, $io)
-	{
+	public static function createAppConfig($dir, $io) {
 		$appConfig = $dir.'/config/app.php';
 		$defaultConfig = $dir.'/config/app.default.php';
 		if (!file_exists($appConfig)) {
@@ -100,8 +109,7 @@ class Installer
 	 * @param \Composer\IO\IOInterface $io IO interface to write to console.
 	 * @return void
 	 */
-	public static function createWritableDirectories($dir, $io)
-	{
+	public static function createWritableDirectories($dir, $io) {
 		foreach (static::WRITABLE_DIRS as $path) {
 			$path = $dir.'/'.$path;
 			if (!file_exists($path)) {
@@ -120,8 +128,7 @@ class Installer
 	 * @param \Composer\IO\IOInterface $io IO interface to write to console.
 	 * @return void
 	 */
-	public static function setFolderPermissions($dir, $io)
-	{
+	public static function setFolderPermissions($dir, $io) {
 		// Change the permissions on a path and output the results.
 		$changePerms = function ($path) use ($io) {
 			$currentPerms = fileperms($path) & 0777;
@@ -139,7 +146,8 @@ class Installer
 		};
 
 		$walker = function ($dir) use (&$walker, $changePerms) {
-			$files = array_diff(scandir($dir), ['.', '..']);
+			$files = array_diff(scandir($dir), ['.',
+				'..']);
 			foreach ($files as $file) {
 				$path = $dir.'/'.$file;
 
@@ -164,8 +172,7 @@ class Installer
 	 * @param \Composer\IO\IOInterface $io IO interface to write to console.
 	 * @return void
 	 */
-	public static function setSecuritySalt($dir, $io)
-	{
+	public static function setSecuritySalt($dir, $io) {
 		$newKey = hash('sha256', Security::randomBytes(64));
 		static::setSecuritySaltInFile($dir, $io, $newKey, 'app.php');
 	}
@@ -179,8 +186,7 @@ class Installer
 	 * @param string $file A path to a file relative to the application's root
 	 * @return void
 	 */
-	public static function setSecuritySaltInFile($dir, $io, $newKey, $file)
-	{
+	public static function setSecuritySaltInFile($dir, $io, $newKey, $file) {
 		$config = $dir.'/config/'.$file;
 		$content = file_get_contents($config);
 
@@ -210,8 +216,7 @@ class Installer
 	 * @param string $file A path to a file relative to the application's root
 	 * @return void
 	 */
-	public static function setAppNameInFile($dir, $io, $appName, $file)
-	{
+	public static function setAppNameInFile($dir, $io, $appName, $file) {
 		$config = $dir.'/config/'.$file;
 		$content = file_get_contents($config);
 		$content = str_replace('__APP_NAME__', $appName, $content, $count);

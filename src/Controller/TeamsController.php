@@ -19,8 +19,7 @@ use RuntimeException;
  *
  * @method \App\Model\Entity\Team[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class TeamsController extends AppController
-{
+class TeamsController extends AppController {
 
 	/**
 	 * ログインしていなくてもアクセスできるページを定義する
@@ -29,14 +28,12 @@ class TeamsController extends AppController
 	 * @param Event $event
 	 * @return \Cake\Http\Response|null|void
 	 */
-	public function beforeFilter(Event $event)
-	{
+	public function beforeFilter(Event $event) {
 		parent::beforeFilter($event);
 		$this->Auth->allow(['index']);
 	}
 
-	public function isAuthorized($user)
-	{
+	public function isAuthorized($user) {
 		//ログアウトと権限エラー時はスルー
 		if (in_array($this->request->getParam('action'), ['index'])) {
 			return true;
@@ -55,8 +52,7 @@ class TeamsController extends AppController
 	 *
 	 * @return \Cake\Http\Response|void
 	 */
-	public function index()
-	{
+	public function index() {
 		$this->viewBuilder()->setLayout('editor_layout');
 
 		$conditions = [];
@@ -76,7 +72,8 @@ class TeamsController extends AppController
 			if ($this->request->getQuery('role') != '' && $this->request->getQuery('role') != '-1') {
 				$conditions['role'] = $this->request->getQuery('role');
 			}
-			$teams = $this->paginate($this->Teams->find('all', ['order' => $sort, 'conditions' => $conditions]));
+			$teams = $this->paginate($this->Teams->find('all', ['order' => $sort,
+				'conditions' => $conditions]));
 		}
 
 		$this->set(compact('teams'));
@@ -89,8 +86,7 @@ class TeamsController extends AppController
 	 * @return \Cake\Http\Response|void
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function view($id = null)
-	{
+	public function view($id = null) {
 		$this->viewBuilder()->setLayout('my_layout');
 		$team = $this->Teams->get($id, ['contain' => []]);
 
@@ -103,8 +99,7 @@ class TeamsController extends AppController
 	 * 画面遷移：ログイン画面へ遷移
 	 * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
 	 */
-	public function add()
-	{
+	public function add() {
 		$this->viewBuilder()->setLayout('editor_layout');
 		$team = $this->Teams->newEntity();
 		if ($this->request->is('post')) {
@@ -120,7 +115,8 @@ class TeamsController extends AppController
 				if (!is_null($cover_image_path)) {
 					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
 					if ($cover_image_path['tmp_name'] != '') {
-						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, UPLOAD_COVER_IMAGE_CAPACITY);
+						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir,
+							UPLOAD_COVER_IMAGE_CAPACITY);
 						$team->cover_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$team->cover_image_path = null;
@@ -131,7 +127,8 @@ class TeamsController extends AppController
 				$icon_image_path = $this->request->getData('icon_image_path');
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
-						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, UPLOAD_ICON_IMAGE_CAPACITY);
+						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir,
+							UPLOAD_ICON_IMAGE_CAPACITY);
 						$team->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$team->icon_image_path = null;
@@ -182,11 +179,12 @@ class TeamsController extends AppController
 	 * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function edit($id = null)
-	{
+	public function edit($id = null) {
 		$this->viewBuilder()->setLayout('editor_layout');
 		$team = $this->Teams->get($id, ['contain' => []]);
-		if ($this->request->is(['patch', 'post', 'put'])) {
+		if ($this->request->is(['patch',
+			'post',
+			'put'])) {
 			$team = $this->Teams->patchEntity($team, $this->request->getData());
 
 			// ファイルのアップロード処理
@@ -199,7 +197,8 @@ class TeamsController extends AppController
 				if (!is_null($cover_image_path)) {
 					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
 					if ($cover_image_path['tmp_name'] != '') {
-						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, UPLOAD_COVER_IMAGE_CAPACITY);
+						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir,
+							UPLOAD_COVER_IMAGE_CAPACITY);
 						$team->cover_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$team->cover_image_path = null;
@@ -210,7 +209,8 @@ class TeamsController extends AppController
 				$icon_image_path = $this->request->getData('icon_image_path');
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
-						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, UPLOAD_ICON_IMAGE_CAPACITY);
+						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir,
+							UPLOAD_ICON_IMAGE_CAPACITY);
 						$team->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$team->icon_image_path = null;
@@ -219,7 +219,8 @@ class TeamsController extends AppController
 
 				if ($this->Teams->save($team)) {
 					$this->Flash->success(__('チームを登録しました。'));
-					return $this->redirect(array('action' => 'view', $id));
+					return $this->redirect(array('action' => 'view',
+						$id));
 				} else {
 					$this->Flash->error(__('入力エラーが発生しました'));
 					$this->set(compact('post'));
@@ -241,9 +242,9 @@ class TeamsController extends AppController
 	 * @return \Cake\Http\Response|null Redirects to index.
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function delete($id = null)
-	{
-		$this->request->allowMethod(['post', 'delete']);
+	public function delete($id = null) {
+		$this->request->allowMethod(['post',
+			'delete']);
 		$team = $this->Teams->get($id);
 		if ($this->Teams->delete($team)) {
 			$this->Flash->success(__('チーム情報を削除いたしました。'));
@@ -261,8 +262,7 @@ class TeamsController extends AppController
 	 * @param float|int $limitFileSize
 	 * @return string
 	 */
-	public function file_upload($file = null, $dir = null, $limitFileSize = 1024 * 1024)
-	{
+	public function file_upload($file = null, $dir = null, $limitFileSize = 1024 * 1024) {
 		try {
 			// ファイルを保存するフォルダ $dirの値のチェック
 			if ($dir) {
@@ -302,7 +302,10 @@ class TeamsController extends AppController
 			}
 
 			// ファイルタイプのチェックし、拡張子を取得
-			if (false === $ext = array_search($fileInfo->mime(), ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'gif' => 'image/gif',], true)) {
+			if (false === $ext = array_search($fileInfo->mime(), ['jpg' => 'image/jpeg',
+					'jpeg' => 'image/jpeg',
+					'png' => 'image/png',
+					'gif' => 'image/gif',], true)) {
 				throw new RuntimeException('画像ファイル以外がアップロードされました。');
 			}
 
@@ -324,8 +327,7 @@ class TeamsController extends AppController
 	 * @param null $id
 	 * @return mixed
 	 */
-	public function deleteCoverImage($id = null)
-	{
+	public function deleteCoverImage($id = null) {
 		$team = $this->Teams->get($id, ['contain' => []]);
 
 		if ($team->cover_image_path != '') {
@@ -350,8 +352,7 @@ class TeamsController extends AppController
 	 * @param null $id
 	 * @return mixed
 	 */
-	public function deleteIcon($id = null)
-	{
+	public function deleteIcon($id = null) {
 		$team = $this->Teams->get($id, ['contain' => []]);
 
 		if ($team->icon_image_path != '') {

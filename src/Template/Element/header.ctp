@@ -129,8 +129,9 @@
 					?>
 					<!-- item-->
 					<a
-						href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->session()
-							->read('Auth.User.id')]); ?>"
+						href="<?php echo $this->Url->build(['controller' => 'Users',
+							'action' => 'view',
+							$this->request->session()->read('Auth.User.id')]); ?>"
 						class="dropdown-item notify-item">
 						<i class="fe-user"></i>
 						<span>アカウント情報</span>
@@ -138,8 +139,9 @@
 
 					<!-- item-->
 					<a
-						href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit', $this->request->session()
-							->read('Auth.User.id')]); ?>"
+						href="<?php echo $this->Url->build(['controller' => 'Users',
+							'action' => 'edit',
+							$this->request->session()->read('Auth.User.id')]); ?>"
 						class="dropdown-item notify-item">
 						<i class="fe-settings"></i>
 						<span>アカウント設定</span>
@@ -153,21 +155,24 @@
 				if ($this->request->session()->check('Auth')) {
 					?>
 					<a
-						href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->session()
-							->read('Auth.User.id')]); ?>"
+						href="<?= $this->Url->build(['controller' => 'Users',
+							'action' => 'view',
+							$this->request->session()->read('Auth.User.id')]); ?>"
 						class="dropdown-item notify-item">
 						<i class="fe-user"></i>
 						<span>ユーザー情報</span>
 					</a>
 					<div class="dropdown-divider"></div>
-					<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"
+					<a href="<?= $this->Url->build(['controller' => 'Users',
+						'action' => 'logout']); ?>"
 						 class="dropdown-item notify-item">
 						<i class="fe-log-out"></i>
 						<span>ログアウト</span>
 					</a>
 					<a
-						href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'unsubscribe', $this->request->session()
-							->read('Auth.User.id')]); ?>"
+						href="<?= $this->Url->build(['controller' => 'Users',
+							'action' => 'unsubscribe',
+							$this->request->session()->read('Auth.User.id')]); ?>"
 						class="dropdown-item notify-item">
 						<i class="fe-trash"></i>
 						<span>退会する</span>
@@ -175,12 +180,14 @@
 					<?php
 				} else {
 					?>
-					<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']); ?>"
+					<a href="<?= $this->Url->build(['controller' => 'Users',
+						'action' => 'add']); ?>"
 						 class="dropdown-item notify-item">
 						<i class="fe-log-out"></i>
 						<span>新規会員登録</span>
 					</a>
-					<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']); ?>"
+					<a href="<?= $this->Url->build(['controller' => 'Users',
+						'action' => 'login']); ?>"
 						 class="dropdown-item notify-item">
 						<i class="fe-log-out"></i>
 						<span>ログイン</span>
@@ -199,9 +206,10 @@
 			</button>
 		</li>
 		<li class="app-search d-none d-sm-block">
-			<form>
+			<form action="<?= $this->Url->build(['controller' => 'Tops',
+				'action' => 'event']); ?>" method="get">
 				<div class="input-group">
-					<input type="text" class="form-control" placeholder="イベントを探す...">
+					<input type="text" class="form-control" placeholder="イベントを探す..." name="keyword">
 					<div class="input-group-append">
 						<button class="btn btn-dark" type="submit">
 							<i class="fe-search"></i>

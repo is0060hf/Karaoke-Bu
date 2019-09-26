@@ -17,8 +17,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Event $event
  * @property \App\Model\Entity\User $user
  */
-class EventEntry extends Entity
-{
+class EventEntry extends Entity {
 	/**
 	 * Fields that can be mass assigned using newEntity() or patchEntity().
 	 *
@@ -28,5 +27,11 @@ class EventEntry extends Entity
 	 *
 	 * @var array
 	 */
-	protected $_accessible = ['event_id' => true, 'user_id' => true, 'introduction' => true, 'created' => true, 'modified' => true, 'event' => true, 'user' => true];
+	protected $_accessible = ['event_id' => true,
+		'user_id' => true,
+		'introduction' => true,
+		'created' => true,
+		'modified' => true,
+		'event' => true,
+		'user' => true];
 }

@@ -12,8 +12,7 @@ use Cake\ORM\TableRegistry;
  *
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class TopsController extends AppController
-{
+class TopsController extends AppController {
 	/**
 	 * ログインしていなくてもアクセスできるページを定義する
 	 * 基本的に、ログアウトのみ
@@ -21,18 +20,14 @@ class TopsController extends AppController
 	 * @param Event $event
 	 * @return \Cake\Http\Response|null|void
 	 */
-	public function beforeFilter(Event $event)
-	{
+	public function beforeFilter(Event $event) {
 		parent::beforeFilter($event);
-		$this->Auth->allow(['index']);
+		$this->Auth->allow(['index',
+			'event']);
 	}
 
-	public function isAuthorized($user)
-	{
-		if (in_array($this->request->getParam('action'), ['index'])) {
-			return true;
-		}
-		return parent::isAuthorized($user);
+	public function isAuthorized($user) {
+		return true;
 	}
 
 	/**
@@ -40,8 +35,7 @@ class TopsController extends AppController
 	 *
 	 * @return \Cake\Http\Response|void
 	 */
-	public function index()
-	{
+	public function index() {
 		$this->viewBuilder()->setLayout('editor_layout');
 
 		$conditions = [];
@@ -67,13 +61,53 @@ class TopsController extends AppController
 			if ($this->request->getQuery('prefecture') != '' && $this->request->getQuery('prefecture') != '-1') {
 				$conditions['prefecture'] = $this->request->getQuery('prefecture');
 			}
-			$events = $this->paginate(TableRegistry::get('Events')
-				->find('all', ['order' => $sort, 'conditions' => $conditions]));
+			$events = $this->paginate(TableRegistry::get('Events')->find('all', ['order' => $sort,
+				'conditions' => $conditions]));
 			//				$events = $this->paginate($this->Events->find('all', ['order' => $sort, 'conditions' => $conditions]));
 		}
 
 		$this->set(compact('events'));
 	}
 
+	/**
+	 * Index method
+	 *
+	 * @return \Cake\Http\Response|void
+	 */
+	public function event() {
+		$this->viewBuilder()->setLayout('editor_layout');
+
+		$conditions = [];
+		$sort = ['created' => 'desc'];
+
+		if ($this->request->getQuery('sort') && $this->request->getQuery('direction')) {
+			$sort = [$this->request->getQuery('sort') => $this->request->getQuery('direction')];
+		}
+
+		//検索条件のクリアが選択された場合は全件検索をする
+		if ($this->request->getQuery('submit_btn') == 'clear') {
+			$events = $this->paginate(TableRegistry::get('Events')->find('all', ['order' => $sort]));
+			//				$events = $this->paginate($this->Events->find('all', ['order' => $sort]));
+		} else {
+			if ($this->request->getQuery('keyword') != '') {
+				$conditions['OR'] = [];
+				$conditions['OR']['title like'] = '%'.$this->request->getQuery('keyword').'%';
+				$conditions['OR']['body like'] = '%'.$this->request->getQuery('keyword').'%';
+			}
+			// 地域で絞り込み
+			if ($this->request->getQuery('region') != '' && $this->request->getQuery('region') != '-1') {
+				$conditions['region'] = $this->request->getQuery('region');
+			}
+			// 都道府県で絞り込み
+			if ($this->request->getQuery('prefecture') != '' && $this->request->getQuery('prefecture') != '-1') {
+				$conditions['prefecture'] = $this->request->getQuery('prefecture');
+			}
+			$events = $this->paginate(TableRegistry::get('Events')->find('all', ['order' => $sort,
+				'conditions' => $conditions]));
+			//				$events = $this->paginate($this->Events->find('all', ['order' => $sort, 'conditions' => $conditions]));
+		}
+
+		$this->set(compact('events'));
+	}
 
 }

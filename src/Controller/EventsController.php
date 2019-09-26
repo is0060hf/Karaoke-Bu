@@ -15,8 +15,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
  *
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class EventsController extends AppController
-{
+class EventsController extends AppController {
 	/**
 	 * ログインしていなくてもアクセスできるページを定義する
 	 * 基本的に、ログアウトのみ
@@ -24,14 +23,12 @@ class EventsController extends AppController
 	 * @param Event $event
 	 * @return \Cake\Http\Response|null|void
 	 */
-	public function beforeFilter(Event $event)
-	{
+	public function beforeFilter(Event $event) {
 		parent::beforeFilter($event);
 		$this->Auth->allow(['index']);
 	}
 
-	public function isAuthorized($user)
-	{
+	public function isAuthorized($user) {
 		//ログアウトと権限エラー時はスルー
 		if (in_array($this->request->getParam('action'), ['index'])) {
 			return true;
@@ -50,8 +47,7 @@ class EventsController extends AppController
 	 *
 	 * @return \Cake\Http\Response|void
 	 */
-	public function index()
-	{
+	public function index() {
 		$this->viewBuilder()->setLayout('editor_layout');
 
 		$conditions = [];
@@ -71,7 +67,8 @@ class EventsController extends AppController
 			if ($this->request->getQuery('role') != '' && $this->request->getQuery('role') != '-1') {
 				$conditions['role'] = $this->request->getQuery('role');
 			}
-			$events = $this->paginate($this->Events->find('all', ['order' => $sort, 'conditions' => $conditions]));
+			$events = $this->paginate($this->Events->find('all', ['order' => $sort,
+				'conditions' => $conditions]));
 		}
 
 		$this->set(compact('events'));
@@ -84,8 +81,7 @@ class EventsController extends AppController
 	 * @return \Cake\Http\Response|void
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function view($id = null)
-	{
+	public function view($id = null) {
 		$this->viewBuilder()->setLayout('my_layout');
 		$event = $this->Events->get($id, ['contain' => []]);
 
@@ -98,8 +94,7 @@ class EventsController extends AppController
 	 * 画面遷移：ログイン画面へ遷移
 	 * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
 	 */
-	public function add()
-	{
+	public function add() {
 		$this->viewBuilder()->setLayout('editor_layout');
 		$event = $this->Events->newEntity();
 		$event->user_id = $this->request->session()->read('Auth.User.id');
@@ -121,15 +116,17 @@ class EventsController extends AppController
 	 * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function edit($id = null)
-	{
+	public function edit($id = null) {
 		$this->viewBuilder()->setLayout('editor_layout');
 		$event = $this->Events->get($id, ['contain' => []]);
-		if ($this->request->is(['patch', 'post', 'put'])) {
+		if ($this->request->is(['patch',
+			'post',
+			'put'])) {
 			$event = $this->Events->patchEntity($event, $this->request->getData());
 			if ($this->Events->save($event)) {
 				$this->Flash->success(__('イベント情報を正常に更新致しました。'));
-				return $this->redirect(['action' => 'view', $event->id]);
+				return $this->redirect(['action' => 'view',
+					$event->id]);
 			}
 			$this->Flash->error(__('イベント情報を更新できませんでした。'));
 		}
@@ -143,9 +140,9 @@ class EventsController extends AppController
 	 * @return \Cake\Http\Response|null Redirects to index.
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function delete($id = null)
-	{
-		$this->request->allowMethod(['post', 'delete']);
+	public function delete($id = null) {
+		$this->request->allowMethod(['post',
+			'delete']);
 		$event = $this->Events->get($id);
 		if ($this->Events->delete($event)) {
 			$this->Flash->success(__('イベント情報を削除いたしました。'));

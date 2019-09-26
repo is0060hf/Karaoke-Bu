@@ -16,8 +16,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
  *
  * @method \App\Model\Entity\Team[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class StoresController extends AppController
-{
+class StoresController extends AppController {
 
 	/**
 	 * ログインしていなくてもアクセスできるページを定義する
@@ -25,10 +24,10 @@ class StoresController extends AppController
 	 * @param Event $event
 	 * @return \Cake\Http\Response|null|void
 	 */
-	public function beforeFilter(Event $event)
-	{
+	public function beforeFilter(Event $event) {
 		parent::beforeFilter($event);
-		$this->Auth->allow(['index', 'view']);
+		$this->Auth->allow(['index',
+			'view']);
 	}
 
 	/**
@@ -38,9 +37,12 @@ class StoresController extends AppController
 	 * @param $user
 	 * @return bool
 	 */
-	public function isAuthorized($user)
-	{
-		if (in_array($this->request->getParam('action'), ['index', 'view', 'add', 'edit', 'delete'])) {
+	public function isAuthorized($user) {
+		if (in_array($this->request->getParam('action'), ['index',
+			'view',
+			'add',
+			'edit',
+			'delete'])) {
 			return true;
 		}
 
@@ -61,8 +63,7 @@ class StoresController extends AppController
 	 *
 	 * @return \Cake\Http\Response|void
 	 */
-	public function index()
-	{
+	public function index() {
 		$this->viewBuilder()->setLayout('editor_layout');
 
 		$conditions = [];
@@ -82,7 +83,8 @@ class StoresController extends AppController
 			if ($this->request->getQuery('role') != '' && $this->request->getQuery('role') != '-1') {
 				$conditions['role'] = $this->request->getQuery('role');
 			}
-			$stores = $this->paginate($this->Stores->find('all', ['order' => $sort, 'conditions' => $conditions]));
+			$stores = $this->paginate($this->Stores->find('all', ['order' => $sort,
+				'conditions' => $conditions]));
 		}
 
 		$this->set(compact('stores'));
@@ -99,8 +101,7 @@ class StoresController extends AppController
 	 * @return \Cake\Http\Response|void
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function view($id = null)
-	{
+	public function view($id = null) {
 		$this->viewBuilder()->setLayout('my_layout');
 		$store = $this->Stores->get($id, ['contain' => []]);
 
@@ -116,8 +117,7 @@ class StoresController extends AppController
 	 *
 	 * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
 	 */
-	public function add()
-	{
+	public function add() {
 		$this->viewBuilder()->setLayout('editor_layout');
 		$store = $this->Stores->newEntity();
 
@@ -147,17 +147,19 @@ class StoresController extends AppController
 	 * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function edit($id = null)
-	{
+	public function edit($id = null) {
 		$this->viewBuilder()->setLayout('editor_layout');
 		$store = $this->Stores->get($id, ['contain' => []]);
 
-		if ($this->request->is(['patch', 'post', 'put'])) {
+		if ($this->request->is(['patch',
+			'post',
+			'put'])) {
 			$store = $this->Stores->patchEntity($store, $this->request->getData());
 
 			if ($this->Stores->save($store)) {
 				$this->Flash->success(__('店舗を登録しました。'));
-				return $this->redirect(array('action' => 'view', $id));
+				return $this->redirect(array('action' => 'view',
+					$id));
 			} else {
 				$this->Flash->error(__('入力エラーが発生しました'));
 				$this->set(compact('store'));
@@ -178,9 +180,9 @@ class StoresController extends AppController
 	 * @return \Cake\Http\Response|null Redirects to index.
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function delete($id = null)
-	{
-		$this->request->allowMethod(['post', 'delete']);
+	public function delete($id = null) {
+		$this->request->allowMethod(['post',
+			'delete']);
 		$team = $this->Stores->get($id);
 		if ($this->Stores->delete($team)) {
 			$this->Flash->success(__('店舗情報を削除いたしました。'));
@@ -200,8 +202,7 @@ class StoresController extends AppController
 	 *
 	 * @param null $storeId
 	 */
-	public function addImage($storeId = null)
-	{
+	public function addImage($storeId = null) {
 		$this->request->allowMethod(['post']);
 
 		if ($storeId) {

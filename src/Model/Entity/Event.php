@@ -31,8 +31,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\EventComment[] $event_comments
  * @property \App\Model\Entity\EventEntry[] $event_entries
  */
-class Event extends Entity
-{
+class Event extends Entity {
 	/**
 	 * Fields that can be mass assigned using newEntity() or patchEntity().
 	 *
@@ -42,5 +41,25 @@ class Event extends Entity
 	 *
 	 * @var array
 	 */
-	protected $_accessible = ['user_id' => true, 'title' => true, 'body' => true, 'entry_template' => true, 'drink' => true, 'food' => true, 'start_time' => true, 'end_time' => true, 'budget' => true, 'deadline' => true, 'entry_date' => true, 'limited_range' => true, 'number_of_people' => true, 'region' => true, 'prefecture' => true, 'phone_number' => true, 'created' => true, 'modified' => true, 'user' => true, 'event_comments' => true, 'event_entries' => true];
+	protected $_accessible = ['user_id' => true,
+		'title' => true,
+		'body' => true,
+		'entry_template' => true,
+		'drink' => true,
+		'food' => true,
+		'start_time' => true,
+		'end_time' => true,
+		'budget' => true,
+		'deadline' => true,
+		'entry_date' => true,
+		'limited_range' => true,
+		'number_of_people' => true,
+		'region' => true,
+		'prefecture' => true,
+		'phone_number' => true,
+		'created' => true,
+		'modified' => true,
+		'user' => true,
+		'event_comments' => true,
+		'event_entries' => true];
 }

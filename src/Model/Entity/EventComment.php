@@ -17,8 +17,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Event $event
  * @property \App\Model\Entity\User $user
  */
-class EventComment extends Entity
-{
+class EventComment extends Entity {
 	/**
 	 * Fields that can be mass assigned using newEntity() or patchEntity().
 	 *
@@ -28,5 +27,11 @@ class EventComment extends Entity
 	 *
 	 * @var array
 	 */
-	protected $_accessible = ['event_id' => true, 'user_id' => true, 'context' => true, 'created' => true, 'modified' => true, 'event' => true, 'user' => true];
+	protected $_accessible = ['event_id' => true,
+		'user_id' => true,
+		'context' => true,
+		'created' => true,
+		'modified' => true,
+		'event' => true,
+		'user' => true];
 }

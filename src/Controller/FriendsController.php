@@ -12,8 +12,7 @@ use Cake\Event\Event;
  *
  * @method \App\Model\Entity\Team[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class FriendsController extends AppController
-{
+class FriendsController extends AppController {
 
 	/**
 	 * ログインしていなくてもアクセスできるページを定義する
@@ -21,8 +20,7 @@ class FriendsController extends AppController
 	 * @param Event $event
 	 * @return \Cake\Http\Response|null|void
 	 */
-	public function beforeFilter(Event $event)
-	{
+	public function beforeFilter(Event $event) {
 		parent::beforeFilter($event);
 	}
 
@@ -32,8 +30,7 @@ class FriendsController extends AppController
 	 * @param $user
 	 * @return bool
 	 */
-	public function isAuthorized($user)
-	{
+	public function isAuthorized($user) {
 		//基本的に全てのユーザーが全ての機能にアクセス可能
 		return true;
 	}
@@ -55,8 +52,7 @@ class FriendsController extends AppController
 	 *
 	 * @return \Cake\Http\Response|void
 	 */
-	public function index()
-	{
+	public function index() {
 		$this->viewBuilder()->setLayout('editor_layout');
 
 		$conditions = [];
@@ -76,7 +72,8 @@ class FriendsController extends AppController
 			if ($this->request->getQuery('role') != '' && $this->request->getQuery('role') != '-1') {
 				$conditions['role'] = $this->request->getQuery('role');
 			}
-			$friends = $this->paginate($this->Friends->find('all', ['order' => $sort, 'conditions' => $conditions]));
+			$friends = $this->paginate($this->Friends->find('all', ['order' => $sort,
+				'conditions' => $conditions]));
 		}
 
 		$this->set(compact('friends'));
@@ -88,9 +85,9 @@ class FriendsController extends AppController
 	 * @param $destUserId
 	 * @return bool
 	 */
-	public function isFriend($srcUserId, $destUserId)
-	{
-		$friend = $this->Friends->find('All')->where(['src_friend' => $srcUserId, 'dest_friend' => $destUserId])->first();
+	public function isFriend($srcUserId, $destUserId) {
+		$friend = $this->Friends->find('All')->where(['src_friend' => $srcUserId,
+			'dest_friend' => $destUserId])->first();
 
 		if ($friend) {
 			return true;
@@ -105,8 +102,7 @@ class FriendsController extends AppController
 	 * @param $destUserId
 	 * @return bool
 	 */
-	public function isFriendEachOther($srcUserId, $destUserId)
-	{
+	public function isFriendEachOther($srcUserId, $destUserId) {
 		$isFriend = $this->isFriend($srcUserId, $destUserId);
 		$isFriendBack = $this->isFriend($destUserId, $srcUserId);
 		return $isFriend && $isFriendBack;
@@ -121,8 +117,7 @@ class FriendsController extends AppController
 	 * @param null $destUserId
 	 * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
 	 */
-	public function add($destUserId = null)
-	{
+	public function add($destUserId = null) {
 		$this->request->allowMethod(['post']);
 		$myUserId = $this->request->session()->read('Auth.User.id');
 
@@ -172,9 +167,9 @@ class FriendsController extends AppController
 	 * @return \Cake\Http\Response|null Redirects to index.
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
-	public function delete($id = null)
-	{
-		$this->request->allowMethod(['post', 'delete']);
+	public function delete($id = null) {
+		$this->request->allowMethod(['post',
+			'delete']);
 		$friend = $this->Friends->get($id);
 
 		if ($this->Friends->delete($friend)) {

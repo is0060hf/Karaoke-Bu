@@ -30,8 +30,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\TeamPost[] $team_posts
  * @property \App\Model\Entity\TeamUserLink[] $team_user_links
  */
-class User extends Entity
-{
+class User extends Entity {
 	/**
 	 * Fields that can be mass assigned using newEntity() or patchEntity().
 	 *
@@ -41,7 +40,26 @@ class User extends Entity
 	 *
 	 * @var array
 	 */
-	protected $_accessible = ['login_name' => true, 'password' => true, 'nick_name' => true, 'mail_address' => true, 'introduction' => true, 'role' => true, 'official_flg' => true, 'auth_flg' => true, 'uuid' => true, 'icon_image_path' => true, 'cover_image_path' => true, 'region' => true, 'prefecture' => true, 'modified' => true, 'created' => true, 'event_comments' => true, 'event_entries' => true, 'events' => true, 'team_posts' => true, 'team_user_links' => true];
+	protected $_accessible = ['login_name' => true,
+		'password' => true,
+		'nick_name' => true,
+		'mail_address' => true,
+		'introduction' => true,
+		'role' => true,
+		'official_flg' => true,
+		'auth_flg' => true,
+		'uuid' => true,
+		'icon_image_path' => true,
+		'cover_image_path' => true,
+		'region' => true,
+		'prefecture' => true,
+		'modified' => true,
+		'created' => true,
+		'event_comments' => true,
+		'event_entries' => true,
+		'events' => true,
+		'team_posts' => true,
+		'team_user_links' => true];
 
 	/**
 	 * Fields that are excluded from JSON versions of the entity.
