@@ -26,16 +26,14 @@ use Cake\Validation\Validator;
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class UsersTable extends Table
-{
+class UsersTable extends Table {
 	/**
 	 * Initialize method
 	 *
 	 * @param array $config The configuration for the Table.
 	 * @return void
 	 */
-	public function initialize(array $config)
-	{
+	public function initialize(array $config) {
 		parent::initialize($config);
 
 		$this->setTable('users');
@@ -57,18 +55,19 @@ class UsersTable extends Table
 	 * @param \Cake\Validation\Validator $validator Validator instance.
 	 * @return \Cake\Validation\Validator
 	 */
-	public function validationDefault(Validator $validator)
-	{
+	public function validationDefault(Validator $validator) {
 		$validator->integer('id')->allowEmptyString('id', null, 'create');
 
 		$validator->scalar('login_name')->maxLength('login_name', 32)->requirePresence('login_name', 'create')
-			->notEmptyString('login_name')->add('login_name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+			->notEmptyString('login_name')->add('login_name', 'unique', ['rule' => 'validateUnique',
+				'provider' => 'table']);
 
 		$validator->scalar('password')->maxLength('password', 256)->requirePresence('password', 'create')
 			->notEmptyString('password');
 
 		$validator->scalar('nick_name')->maxLength('nick_name', 64)->requirePresence('nick_name', 'create')
-			->notEmptyString('nick_name')->add('nick_name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+			->notEmptyString('nick_name')->add('nick_name', 'unique', ['rule' => 'validateUnique',
+				'provider' => 'table']);
 
 		$validator->scalar('mail_address')->maxLength('mail_address', 256)->requirePresence('mail_address', 'create')
 			->notEmptyString('mail_address');
@@ -102,8 +101,7 @@ class UsersTable extends Table
 	 * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
 	 * @return \Cake\ORM\RulesChecker
 	 */
-	public function buildRules(RulesChecker $rules)
-	{
+	public function buildRules(RulesChecker $rules) {
 		$rules->add($rules->isUnique(['login_name']));
 		$rules->add($rules->isUnique(['nick_name']));
 

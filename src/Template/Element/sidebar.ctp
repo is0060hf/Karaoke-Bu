@@ -4,7 +4,8 @@
 	<div class="slimscroll-menu">
 
 		<!-- LOGO -->
-		<a href="<?php echo $this->Url->build(['controller' => 'Tops', 'action' => 'index']); ?>"
+		<a href="<?php echo $this->Url->build(['controller' => 'Tops',
+			'action' => 'index']); ?>"
 			 class="logo text-center mb-4">
 			<span class="logo-lg">
 				<img src="/assets/images/logo.png" alt="" height="60">
@@ -30,10 +31,12 @@
 						</a>
 						<ul class="nav-second-level" aria-expanded="false">
 							<li>
-								<?= $this->Html->link(__('新規会員追加'), ['controller' => 'Users', 'action' => 'add']) ?>
+								<?= $this->Html->link(__('新規会員追加'), ['controller' => 'Users',
+									'action' => 'add']) ?>
 							</li>
 							<li>
-								<?= $this->Html->link(__('会員情報一覧'), ['controller' => 'Users', 'action' => 'index']) ?>
+								<?= $this->Html->link(__('会員情報一覧'), ['controller' => 'Users',
+									'action' => 'index']) ?>
 							</li>
 						</ul>
 					</li>
@@ -45,10 +48,12 @@
 						</a>
 						<ul class="nav-second-level" aria-expanded="false">
 							<li>
-								<?= $this->Html->link(__('新規登録'), ['controller' => 'Events', 'action' => 'add']) ?>
+								<?= $this->Html->link(__('新規登録'), ['controller' => 'Events',
+									'action' => 'add']) ?>
 							</li>
 							<li>
-								<?= $this->Html->link(__('イベント一覧'), ['controller' => 'Events', 'action' => 'index']) ?>
+								<?= $this->Html->link(__('イベント一覧'), ['controller' => 'Events',
+									'action' => 'index']) ?>
 							</li>
 						</ul>
 					</li>
@@ -60,7 +65,8 @@
 						</a>
 						<ul class="nav-second-level" aria-expanded="false">
 							<li>
-								<?= $this->Html->link(__('ともだち一覧'), ['controller' => 'Friends', 'action' => 'index']) ?>
+								<?= $this->Html->link(__('ともだち一覧'), ['controller' => 'Friends',
+									'action' => 'index']) ?>
 							</li>
 						</ul>
 					</li>
@@ -72,13 +78,16 @@
 						</a>
 						<ul class="nav-second-level" aria-expanded="false">
 							<li>
-								<?= $this->Html->link(__('新規チーム登録'), ['controller' => 'Teams', 'action' => 'add']) ?>
+								<?= $this->Html->link(__('新規チーム登録'), ['controller' => 'Teams',
+									'action' => 'add']) ?>
 							</li>
 							<li>
-								<?= $this->Html->link(__('参加チーム一覧'), ['controller' => 'Teams', 'action' => 'index']) ?>
+								<?= $this->Html->link(__('参加チーム一覧'), ['controller' => 'Teams',
+									'action' => 'index']) ?>
 							</li>
 							<li>
-								<?= $this->Html->link(__('チームランキング'), ['controller' => 'Teams', 'action' => 'index']) ?>
+								<?= $this->Html->link(__('チームランキング'), ['controller' => 'Teams',
+									'action' => 'index']) ?>
 							</li>
 						</ul>
 					</li>
@@ -93,7 +102,8 @@
 					</a>
 					<ul class="nav-second-level" aria-expanded="false">
 						<li>
-							<?= $this->Html->link(__('トップ'), ['controller' => 'Tops', 'action' => 'index']) ?>
+							<?= $this->Html->link(__('トップ'), ['controller' => 'Tops',
+								'action' => 'index']) ?>
 						</li>
 					</ul>
 				</li>

@@ -23,16 +23,14 @@ use Psy\Shell as PsyShell;
 /**
  * Simple console wrapper around Psy\Shell.
  */
-class ConsoleShell extends Shell
-{
+class ConsoleShell extends Shell {
 
 	/**
 	 * Start the shell and interactive console.
 	 *
 	 * @return int|null
 	 */
-	public function main()
-	{
+	public function main() {
 		if (!class_exists('Psy\Shell')) {
 			$this->err('<error>Unable to load Psy\Shell.</error>');
 			$this->err('');
@@ -65,8 +63,7 @@ class ConsoleShell extends Shell
 	 *
 	 * @return \Cake\Console\ConsoleOptionParser
 	 */
-	public function getOptionParser()
-	{
+	public function getOptionParser() {
 		$parser = new ConsoleOptionParser('console');
 		$parser->setDescription('This shell provides a REPL that you can use to interact with '.'your application in a command line designed to run PHP code. '.'You can use it to run adhoc queries with your models, or '.'explore the features of CakePHP and your application.'."\n\n".'You will need to have psysh installed for this Shell to work.');
 

@@ -19,11 +19,13 @@ foreach ($userList as $usr) {
 	<div class="col-6 breadcrumb_div">
 		<ol class="breadcrumb m-b-20">
 			<li class="breadcrumb-item"><a
-					href="<?php echo $this->Url->build(['controller' => 'Tops', 'action' => 'index']); ?>">Home</a></li>
+					href="<?php echo $this->Url->build(['controller' => 'Tops',
+						'action' => 'index']); ?>">Home</a></li>
 		</ol>
 	</div>
 	<div class="col-6 text-right">
-		<a href="<?= $this->Url->build(['controller' => 'Events', 'action' => 'add']); ?>" class="btn btn-success mt-2">
+		<a href="<?= $this->Url->build(['controller' => 'Events',
+			'action' => 'add']); ?>" class="btn btn-success mt-2">
 			<i class="fe-file"></i>
 			<span>ピックアップイベント</span>
 		</a>
@@ -32,10 +34,20 @@ foreach ($userList as $usr) {
 
 <div class="users index large-9 medium-8 columns content">
 	<?php
-	$form_template = array('error' => '<div class="col-sm-12 error-message alert alert-danger mt-1 mb-2 py-1">{{content}}</div>', 'nestingLabel' => '{{hidden}}{{input}}<label{{attrs}}>{{text}}</label>', 'formGroup' => '<div class="col-sm-2">{{label}}</div><div class="col-sm-10 d-flex align-items-center">{{input}}</div>', 'dateWidget' => '{{year}} 年 {{month}} 月 {{day}} 日  {{hour}}時{{minute}}分', 'select' => '<select name="{{name}}"{{attrs}} data-toggle="{{select_toggle}}">{{content}}</select>', 'input' => '<input class="form-control" type="{{type}}" name="{{name}}" {{attrs}} data-toggle="{{data_toggle}}" maxlength="{{max_length}}" data-mask-format="{{data_mask_format}}">', 'inputContainer' => '<div class="input {{type}}{{required}} {{div_class}}" data-toggle="{{div_tooltip}}" data-placement="{{div_tooltip_placement}}" data-original-title="{{div_tooltip_title}}">{{content}}</div>', 'inputContainerError' => '<div class="input {{type}}{{required}} error {{div_class}}" data-toggle="{{div_tooltip}}" data-placement="{{div_tooltip_placement}}" data-original-title="{{div_tooltip_title}}">{{content}}{{error}}</div>');
+	$form_template = array('error' => '<div class="col-sm-12 error-message alert alert-danger mt-1 mb-2 py-1">{{content}}</div>',
+		'nestingLabel' => '{{hidden}}{{input}}<label{{attrs}}>{{text}}</label>',
+		'formGroup' => '<div class="col-sm-2">{{label}}</div><div class="col-sm-10 d-flex align-items-center">{{input}}</div>',
+		'dateWidget' => '{{year}} 年 {{month}} 月 {{day}} 日  {{hour}}時{{minute}}分',
+		'select' => '<select name="{{name}}"{{attrs}} data-toggle="{{select_toggle}}">{{content}}</select>',
+		'input' => '<input class="form-control" type="{{type}}" name="{{name}}" {{attrs}} data-toggle="{{data_toggle}}" maxlength="{{max_length}}" data-mask-format="{{data_mask_format}}">',
+		'inputContainer' => '<div class="input {{type}}{{required}} {{div_class}}" data-toggle="{{div_tooltip}}" data-placement="{{div_tooltip_placement}}" data-original-title="{{div_tooltip_title}}">{{content}}</div>',
+		'inputContainerError' => '<div class="input {{type}}{{required}} error {{div_class}}" data-toggle="{{div_tooltip}}" data-placement="{{div_tooltip_placement}}" data-original-title="{{div_tooltip_title}}">{{content}}{{error}}</div>');
 	?>
 
-	<?= $this->Form->create(null, array('templates' => $form_template, 'type' => 'get', 'idPrefix' => 'search_form', 'name' => 'search_form')); ?>
+	<?= $this->Form->create(null, array('templates' => $form_template,
+		'type' => 'get',
+		'idPrefix' => 'search_form',
+		'name' => 'search_form')); ?>
 
 	<legend><?= __('イベント情報一覧') ?></legend>
 
@@ -54,14 +66,38 @@ foreach ($userList as $usr) {
 					<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="">
 						<div class="card-body">
 							<?php
-							echo $this->Form->control('region', array('label' => array('text' => '開催地域',       // labelで出力するテキスト
-								'class' => 'col-form-label' // labelタグのクラス名
-							), 'type' => 'select', 'options' => REGION_ARRAY, 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => '絞り込みたい開催地域を選択してください。'), 'value' => $this->request->getQuery('region'), 'id' => 'region', 'class' => 'form-control'      // inputタグのクラス名
+							echo $this->Form->control('region', array('label' => array('text' => '開催地域',
+								// labelで出力するテキスト
+								'class' => 'col-form-label'
+								// labelタグのクラス名
+							),
+								'type' => 'select',
+								'options' => REGION_ARRAY,
+								'templateVars' => array('div_class' => 'form-group row',
+									'div_tooltip' => 'tooltip',
+									'div_tooltip_placement' => 'top',
+									'div_tooltip_title' => '絞り込みたい開催地域を選択してください。'),
+								'value' => $this->request->getQuery('region'),
+								'id' => 'region',
+								'class' => 'form-control'
+								// inputタグのクラス名
 							));
 							$paramRegion = $this->request->getQuery('region') ? $this->request->getQuery('region') : -1;
-							echo $this->Form->control('prefecture', array('label' => array('text' => '開催地',       // labelで出力するテキスト
-								'class' => 'col-form-label' // labelタグのクラス名
-							), 'type' => 'select', 'options' => PREFECTURE_ARRAY, 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => '絞り込みたい開催地を選択してください。'), 'value' => $this->request->getQuery('prefecture'), 'id' => 'prefecture', 'class' => 'form-control',      // inputタグのクラス名
+							echo $this->Form->control('prefecture', array('label' => array('text' => '開催地',
+								// labelで出力するテキスト
+								'class' => 'col-form-label'
+								// labelタグのクラス名
+							),
+								'type' => 'select',
+								'options' => PREFECTURE_ARRAY,
+								'templateVars' => array('div_class' => 'form-group row',
+									'div_tooltip' => 'tooltip',
+									'div_tooltip_placement' => 'top',
+									'div_tooltip_title' => '絞り込みたい開催地を選択してください。'),
+								'value' => $this->request->getQuery('prefecture'),
+								'id' => 'prefecture',
+								'class' => 'form-control',
+								// inputタグのクラス名
 							));
 							?>
 
@@ -99,7 +135,9 @@ foreach ($userList as $usr) {
 		<?php foreach ($events as $event): ?>
 			<tr>
 				<td class="align-middle"><a
-						href="<?php echo $this->Url->build(['controller' => 'Events', 'action' => 'view', $event->id]); ?>"><?= h($event->title) ?></a>
+						href="<?php echo $this->Url->build(['controller' => 'Events',
+							'action' => 'view',
+							$event->id]); ?>"><?= h($event->title) ?></a>
 				</td>
 				<td class="align-middle"><?= h($event->start_time) ?></td>
 				<td class="align-middle"><?= h($event->budget) ?></td>

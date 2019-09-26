@@ -15,8 +15,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\Store $store
  */
-class StoreImage extends Entity
-{
+class StoreImage extends Entity {
 	/**
 	 * Fields that can be mass assigned using newEntity() or patchEntity().
 	 *
@@ -26,5 +25,9 @@ class StoreImage extends Entity
 	 *
 	 * @var array
 	 */
-	protected $_accessible = ['store_id' => true, 'image_path' => true, 'created' => true, 'modified' => true, 'store' => true];
+	protected $_accessible = ['store_id' => true,
+		'image_path' => true,
+		'created' => true,
+		'modified' => true,
+		'store' => true];
 }

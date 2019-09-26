@@ -23,16 +23,14 @@ use Cake\Validation\Validator;
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class TeamUserLinksTable extends Table
-{
+class TeamUserLinksTable extends Table {
 	/**
 	 * Initialize method
 	 *
 	 * @param array $config The configuration for the Table.
 	 * @return void
 	 */
-	public function initialize(array $config)
-	{
+	public function initialize(array $config) {
 		parent::initialize($config);
 
 		$this->setTable('team_user_links');
@@ -41,8 +39,10 @@ class TeamUserLinksTable extends Table
 
 		$this->addBehavior('Timestamp');
 
-		$this->belongsTo('Users', ['foreignKey' => 'user_id', 'joinType' => 'INNER']);
-		$this->belongsTo('Teams', ['foreignKey' => 'team_id', 'joinType' => 'INNER']);
+		$this->belongsTo('Users', ['foreignKey' => 'user_id',
+			'joinType' => 'INNER']);
+		$this->belongsTo('Teams', ['foreignKey' => 'team_id',
+			'joinType' => 'INNER']);
 	}
 
 	/**
@@ -51,8 +51,7 @@ class TeamUserLinksTable extends Table
 	 * @param \Cake\Validation\Validator $validator Validator instance.
 	 * @return \Cake\Validation\Validator
 	 */
-	public function validationDefault(Validator $validator)
-	{
+	public function validationDefault(Validator $validator) {
 		$validator->integer('id')->allowEmptyString('id', null, 'create');
 
 		$validator->integer('status')->requirePresence('status', 'create')->notEmptyString('status');
@@ -69,8 +68,7 @@ class TeamUserLinksTable extends Table
 	 * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
 	 * @return \Cake\ORM\RulesChecker
 	 */
-	public function buildRules(RulesChecker $rules)
-	{
+	public function buildRules(RulesChecker $rules) {
 		$rules->add($rules->existsIn(['user_id'], 'Users'));
 		$rules->add($rules->existsIn(['team_id'], 'Teams'));
 

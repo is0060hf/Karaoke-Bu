@@ -7,5 +7,6 @@ $this->assign('title', 'ユーザー認証完了');
 	<p class="text-muted mt-3">ご登録頂きましたユーザーの有効化作業が完了致しました。</p>
 	<p class="text-muted">ホームへ戻りログインをしてください。</p>
 </div>
-<?= $this->Html->link("ホームへ戻る", ['controller' => 'tops', 'action' => 'index'], ['class' => 'btn btn-info btn-block mt-3']); ?>
+<?= $this->Html->link("ホームへ戻る", ['controller' => 'tops',
+	'action' => 'index'], ['class' => 'btn btn-info btn-block mt-3']); ?>
 </div>

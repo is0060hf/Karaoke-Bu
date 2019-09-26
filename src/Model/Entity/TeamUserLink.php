@@ -18,8 +18,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\Team $team
  */
-class TeamUserLink extends Entity
-{
+class TeamUserLink extends Entity {
 	/**
 	 * Fields that can be mass assigned using newEntity() or patchEntity().
 	 *
@@ -29,5 +28,12 @@ class TeamUserLink extends Entity
 	 *
 	 * @var array
 	 */
-	protected $_accessible = ['user_id' => true, 'team_id' => true, 'status' => true, 'role' => true, 'created' => true, 'modified' => true, 'user' => true, 'team' => true];
+	protected $_accessible = ['user_id' => true,
+		'team_id' => true,
+		'status' => true,
+		'role' => true,
+		'created' => true,
+		'modified' => true,
+		'user' => true,
+		'team' => true];
 }

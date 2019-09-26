@@ -162,7 +162,8 @@
 		const region = $(this).val();
 		const prefecture = $('#prefecture').val();
 		$.ajax({
-			url: "<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'ajaxGetPrefecture']); ?>",
+			url: "<?php echo $this->Url->build(['controller' => 'Users',
+				'action' => 'ajaxGetPrefecture']); ?>",
 			type: 'get',
 			async: false,
 			data: {

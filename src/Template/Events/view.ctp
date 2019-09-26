@@ -7,9 +7,11 @@
 <div class="breadcrumb_div">
 	<ol class="breadcrumb m-b-20">
 		<li class="breadcrumb-item"><a
-				href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">Home</a></li>
+				href="<?php echo $this->Url->build(['controller' => 'Users',
+					'action' => 'index']); ?>">Home</a></li>
 		<li class="breadcrumb-item"><a
-				href="<?php echo $this->Url->build(['controller' => 'Events', 'action' => 'index']); ?>">イベント情報一覧</a></li>
+				href="<?php echo $this->Url->build(['controller' => 'Events',
+					'action' => 'index']); ?>">イベント情報一覧</a></li>
 		<li class="breadcrumb-item active">イベント情報詳細</li>
 	</ol>
 </div>
@@ -68,12 +70,15 @@
 	</table>
 	<div class="row">
 		<div class="col-12 text-center">
-			<a href="<?= $this->Url->build(['controller' => 'Events', 'action' => 'edit', $event->id]); ?>"
+			<a href="<?= $this->Url->build(['controller' => 'Events',
+				'action' => 'edit',
+				$event->id]); ?>"
 				 class="btn btn-success mr-3">
 				<i class="fe-edit"></i>
 				<span>編集する</span>
 			</a>
-			<a href="<?= $this->Url->build(['controller' => 'Events', 'action' => 'index']); ?>" class="btn btn-info">
+			<a href="<?= $this->Url->build(['controller' => 'Events',
+				'action' => 'index']); ?>" class="btn btn-info">
 				<i class="fe-skip-back"></i>
 				<span>一覧に戻る</span>
 			</a>

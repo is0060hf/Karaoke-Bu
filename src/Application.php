@@ -28,13 +28,11 @@ use Cake\Routing\Middleware\RoutingMiddleware;
  * This defines the bootstrapping logic and middleware layers you
  * want to use in your application.
  */
-class Application extends BaseApplication
-{
+class Application extends BaseApplication {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap()
-	{
+	public function bootstrap() {
 		// Call parent to load bootstrap from files.
 		parent::bootstrap();
 
@@ -59,11 +57,11 @@ class Application extends BaseApplication
 	 * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
 	 * @return \Cake\Http\MiddlewareQueue The updated middleware queue.
 	 */
-	public function middleware($middlewareQueue)
-	{
+	public function middleware($middlewareQueue) {
 		$middlewareQueue// Catch any exceptions in the lower layers,
 		// and make an error page/response
-		->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))// Handle plugin/theme assets like CakePHP normally does.
+		->add(new ErrorHandlerMiddleware(null,
+			Configure::read('Error')))// Handle plugin/theme assets like CakePHP normally does.
 		->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))// Add routing middleware.
 		// If you have a large number of routes connected, turning on routes
 		// caching in production could improve performance. For that when
@@ -78,8 +76,7 @@ class Application extends BaseApplication
 	/**
 	 * @return void
 	 */
-	protected function bootstrapCli()
-	{
+	protected function bootstrapCli() {
 		try {
 			$this->addPlugin('Bake');
 		} catch (MissingPluginException $e) {

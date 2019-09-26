@@ -13,8 +13,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  */
-class Friend extends Entity
-{
+class Friend extends Entity {
 	/**
 	 * Fields that can be mass assigned using newEntity() or patchEntity().
 	 *
@@ -24,5 +23,8 @@ class Friend extends Entity
 	 *
 	 * @var array
 	 */
-	protected $_accessible = ['src_friend' => true, 'dest_friend' => true, 'created' => true, 'modified' => true];
+	protected $_accessible = ['src_friend' => true,
+		'dest_friend' => true,
+		'created' => true,
+		'modified' => true];
 }

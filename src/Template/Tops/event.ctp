@@ -21,14 +21,13 @@ foreach ($userList as $usr) {
 			<li class="breadcrumb-item"><a
 					href="<?php echo $this->Url->build(['controller' => 'Tops',
 						'action' => 'index']); ?>">Home</a></li>
-			<li class="breadcrumb-item active">イベント情報一覧</li>
 		</ol>
 	</div>
 	<div class="col-6 text-right">
 		<a href="<?= $this->Url->build(['controller' => 'Events',
 			'action' => 'add']); ?>" class="btn btn-success mt-2">
-			<i class="fe-git-pull-request"></i>
-			<span>新規登録する</span>
+			<i class="fe-file"></i>
+			<span>イベント検索画面</span>
 		</a>
 	</div>
 </div>
@@ -54,56 +53,67 @@ foreach ($userList as $usr) {
 
 	<div class="row">
 		<div class="col-12">
-			<div class="card">
-				<div class="card-body pt-4">
-					<?php
-					echo $this->Form->control('mail_address', array('label' => array('text' => 'メールアドレス',
-						// labelで出力するテキスト
-						'class' => 'col-form-label'
-						// labelタグのクラス名
-					),
-						'type' => 'text',
-						'options' => $usersNameList,
-						'templateVars' => array('div_class' => 'form-group row',
-							'div_tooltip' => 'tooltip',
-							'div_tooltip_placement' => 'top',
-							'div_tooltip_title' => '絞り込みたい配達員の名前を入力してください。',),
-						'value' => $this->request->getQuery('mail_address'),
-						'id' => 'mail_address',
-						'class' => 'form-control'
-						// inputタグのクラス名
-					));
-					echo $this->Form->control('role', array('label' => array('text' => 'ユーザー種別',
-						// labelで出力するテキスト
-						'class' => 'col-form-label'
-						// labelタグのクラス名
-					),
-						'type' => 'select',
-						'options' => ROLE_NAME_ARRAY,
-						'templateVars' => array('div_class' => 'form-group row',
-							'div_tooltip' => 'tooltip',
-							'div_tooltip_placement' => 'top',
-							'div_tooltip_title' => '絞り込みたい配達員の名前を入力してください。',
-							'select_toggle' => 'select2'),
-						'value' => $this->request->getQuery('role'),
-						'id' => 'role',
-						'class' => 'form-control select2'
-						// inputタグのクラス名
-					));
+			<div id="accordion" class="">
+				<div class="card">
+					<div class="card-header" id="headingOne">
+						<h5 class="m-0">
+							<a class="text-dark collapsed" data-toggle="collapse" href="#collapseOne" aria-expanded="false">
+								<i class="mdi mdi-search-web mr-1 text-primary"></i>
+								絞り込み
+							</a>
+						</h5>
+					</div>
+					<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="">
+						<div class="card-body">
+							<?php
+							echo $this->Form->control('region', array('label' => array('text' => '開催地域',
+								// labelで出力するテキスト
+								'class' => 'col-form-label'
+								// labelタグのクラス名
+							),
+								'type' => 'select',
+								'options' => REGION_ARRAY,
+								'templateVars' => array('div_class' => 'form-group row',
+									'div_tooltip' => 'tooltip',
+									'div_tooltip_placement' => 'top',
+									'div_tooltip_title' => '絞り込みたい開催地域を選択してください。'),
+								'value' => $this->request->getQuery('region'),
+								'id' => 'region',
+								'class' => 'form-control'
+								// inputタグのクラス名
+							));
+							$paramRegion = $this->request->getQuery('region') ? $this->request->getQuery('region') : -1;
+							echo $this->Form->control('prefecture', array('label' => array('text' => '開催地',
+								// labelで出力するテキスト
+								'class' => 'col-form-label'
+								// labelタグのクラス名
+							),
+								'type' => 'select',
+								'options' => PREFECTURE_ARRAY,
+								'templateVars' => array('div_class' => 'form-group row',
+									'div_tooltip' => 'tooltip',
+									'div_tooltip_placement' => 'top',
+									'div_tooltip_title' => '絞り込みたい開催地を選択してください。'),
+								'value' => $this->request->getQuery('prefecture'),
+								'id' => 'prefecture',
+								'class' => 'form-control',
+								// inputタグのクラス名
+							));
+							?>
 
-					?>
-
-					<div class="row my-2">
-						<div class="col-12 text-center">
-							<button class="btn btn-outline-dark mr-3" type="button" name="submit_btn" value="clear"
-											onclick="clearSearchElementsInUser();document.search_form.submit();">
-								<i class="fe-edit"></i>
-								<span>検索条件クリア</span>
-							</button>
-							<button class="btn btn-primary mr-3" type="submit" name="submit_btn" value="search">
-								<i class="fe-edit"></i>
-								<span>検索</span>
-							</button>
+							<div class="row my-2">
+								<div class="col-12 text-center">
+									<button class="btn btn-outline-dark mr-3" type="button" name="submit_btn" value="clear"
+													onclick="clearEventSearchElements();document.search_form.submit();">
+										<i class="fe-edit"></i>
+										<span>検索条件クリア</span>
+									</button>
+									<button class="btn btn-primary mr-3" type="submit" name="submit_btn" value="search">
+										<i class="fe-edit"></i>
+										<span>検索</span>
+									</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -112,7 +122,6 @@ foreach ($userList as $usr) {
 	</div>
 
 	<?= $this->Form->end(); ?>
-
 	<table cellpadding="0" cellspacing="0" class="table table-hover mb-0">
 		<thead>
 		<tr>
@@ -120,7 +129,6 @@ foreach ($userList as $usr) {
 			<th scope="col"><?= $this->Paginator->sort('start_time', 'イベント開始日') ?></th>
 			<th scope="col"><?= $this->Paginator->sort('budget', '予算') ?></th>
 			<th scope="col"><?= $this->Paginator->sort('prefecture', '開催地') ?></th>
-			<th scope="col" class="actions"><?= __('操作') ?></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -129,17 +137,11 @@ foreach ($userList as $usr) {
 				<td class="align-middle"><a
 						href="<?php echo $this->Url->build(['controller' => 'Events',
 							'action' => 'view',
-							$event->id]); ?>"
-						class="btn btn-info"><?= h($event->title) ?></a></td>
+							$event->id]); ?>"><?= h($event->title) ?></a>
+				</td>
 				<td class="align-middle"><?= h($event->start_time) ?></td>
 				<td class="align-middle"><?= h($event->budget) ?></td>
 				<td class="align-middle"><?= h(PREFECTURE_ARRAY[$event->prefecture]) ?></td>
-				<td class="align-middle actions">
-					<?= $this->Html->link(__('編集'), ['action' => 'edit',
-						$event->id]) ?>
-					<?= $this->Form->postLink(__('削除'), ['action' => 'delete',
-						$event->id], ['confirm' => __('本当に削除してもよろしいでしょうか # {0}?', $event->id)]) ?>
-				</td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
