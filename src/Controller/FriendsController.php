@@ -71,7 +71,7 @@ class FriendsController extends AppController
 			$friends = $this->paginate($this->Friends->find('all', ['order' => $sort]));
 		} else {
 			if ($this->request->getQuery('mail_address') != '') {
-				$conditions['mail_address like'] = '%' . $this->request->getQuery('mail_address') . '%';
+				$conditions['mail_address like'] = '%'.$this->request->getQuery('mail_address').'%';
 			}
 			if ($this->request->getQuery('role') != '' && $this->request->getQuery('role') != '-1') {
 				$conditions['role'] = $this->request->getQuery('role');
@@ -88,12 +88,13 @@ class FriendsController extends AppController
 	 * @param $destUserId
 	 * @return bool
 	 */
-	public function isFriend($srcUserId, $destUserId) {
+	public function isFriend($srcUserId, $destUserId)
+	{
 		$friend = $this->Friends->find('All')->where(['src_friend' => $srcUserId, 'dest_friend' => $destUserId])->first();
 
-		if($friend){
+		if ($friend) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -104,7 +105,8 @@ class FriendsController extends AppController
 	 * @param $destUserId
 	 * @return bool
 	 */
-	public function isFriendEachOther($srcUserId, $destUserId) {
+	public function isFriendEachOther($srcUserId, $destUserId)
+	{
 		$isFriend = $this->isFriend($srcUserId, $destUserId);
 		$isFriendBack = $this->isFriend($destUserId, $srcUserId);
 		return $isFriend && $isFriendBack;
@@ -124,7 +126,7 @@ class FriendsController extends AppController
 		$this->request->allowMethod(['post']);
 		$myUserId = $this->request->session()->read('Auth.User.id');
 
-		if($destUserId){
+		if ($destUserId) {
 			if ($myUserId == $destUserId) {
 				$this->Flash->error(__('自分自身とはともだち登録できません。'));
 
@@ -132,7 +134,7 @@ class FriendsController extends AppController
 				return $this->redirect($url);
 			}
 
-			if($this->isFriend($myUserId, $destUserId)){
+			if ($this->isFriend($myUserId, $destUserId)) {
 				$this->Flash->error(__('既にともだち登録されています。'));
 
 				$url = $this->referer(array('action' => 'index'));

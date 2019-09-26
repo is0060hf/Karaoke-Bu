@@ -1,24 +1,24 @@
 <?php
-	/**
-	 * @var \App\View\AppView                                             $this
-	 * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
-	 */
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
+ */
 ?>
 <div class="row">
 	<div class="col-6 breadcrumb_div">
 		<ol class="breadcrumb m-b-20">
-			<li class="breadcrumb-item"><a href="<?php echo $this->Url->build(['controller'=>'Users', 'action'=>'index']); ?>">Home</a></li>
+			<li class="breadcrumb-item"><a
+					href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">Home</a></li>
 			<li class="breadcrumb-item active">会員情報一覧</li>
 		</ol>
 	</div>
 	<div class="col-2 offset-4 text-right">
-		<a href="<?= $this->Url->build(['controller'=>'Users','action'=>'add']); ?>" class="btn btn-success mt-2">
+		<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']); ?>" class="btn btn-success mt-2">
 			<i class="fe-git-pull-request"></i>
 			<span>新規登録する</span>
 		</a>
 	</div>
 </div>
-
 
 
 <div class="users index large-9 medium-8 columns content">
@@ -37,7 +37,9 @@
 		<tbody>
 		<?php foreach ($users as $user): ?>
 			<tr>
-				<td class="align-middle"><a href="<?php echo $this->Url->build(['controller'=>'Users', 'action' => 'view', $user->id]); ?>" class="btn btn-info"><?= h($user->username) ?></a></td>
+				<td class="align-middle"><a
+						href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'view', $user->id]); ?>"
+						class="btn btn-info"><?= h($user->username) ?></a></td>
 				<td class="align-middle"><?= h($user->mail_address) ?></td>
 				<td class="align-middle"><?= h($user->user_role) ?></td>
 				<td class="align-middle"><?= h($user->created) ?></td>

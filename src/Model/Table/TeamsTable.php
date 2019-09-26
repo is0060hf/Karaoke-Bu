@@ -2,7 +2,6 @@
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -41,11 +40,7 @@ class TeamsTable extends Table
 
 		$this->addBehavior('Timestamp');
 
-		$this->hasMany('TeamUserLinks', [
-			'foreignKey' => 'team_id',
-			'dependent' => true,
-			'cascadeCallbacks' => true,
-		]);
+		$this->hasMany('TeamUserLinks', ['foreignKey' => 'team_id', 'dependent' => true, 'cascadeCallbacks' => true,]);
 	}
 
 	/**
@@ -56,31 +51,16 @@ class TeamsTable extends Table
 	 */
 	public function validationDefault(Validator $validator)
 	{
-		$validator
-			->integer('id')
-			->allowEmptyString('id', null, 'create');
+		$validator->integer('id')->allowEmptyString('id', null, 'create');
 
-		$validator
-			->scalar('team_name')
-			->maxLength('team_name', 128)
-			->requirePresence('team_name', 'create')
-			->notEmptyString('team_name')
-			->add('team_name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+		$validator->scalar('team_name')->maxLength('team_name', 128)->requirePresence('team_name', 'create')
+			->notEmptyString('team_name')->add('team_name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
-		$validator
-			->scalar('introduction')
-			->maxLength('introduction', 4294967295)
-			->allowEmptyString('introduction');
+		$validator->scalar('introduction')->maxLength('introduction', 4294967295)->allowEmptyString('introduction');
 
-		$validator
-			->scalar('cover_image_path')
-			->maxLength('cover_image_path', 512)
-			->allowEmptyFile('cover_image_path');
+		$validator->scalar('cover_image_path')->maxLength('cover_image_path', 512)->allowEmptyFile('cover_image_path');
 
-		$validator
-			->scalar('icon_image_path')
-			->maxLength('icon_image_path', 512)
-			->allowEmptyFile('icon_image_path');
+		$validator->scalar('icon_image_path')->maxLength('icon_image_path', 512)->allowEmptyFile('icon_image_path');
 
 		return $validator;
 	}

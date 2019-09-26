@@ -7,8 +7,8 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Filesystem\File;
 use Cake\ORM\TableRegistry;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Settings;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use RuntimeException;
 
 
@@ -71,7 +71,7 @@ class TeamsController extends AppController
 			$teams = $this->paginate($this->Users->find('all', ['order' => $sort]));
 		} else {
 			if ($this->request->getQuery('mail_address') != '') {
-				$conditions['mail_address like'] = '%' . $this->request->getQuery('mail_address') . '%';
+				$conditions['mail_address like'] = '%'.$this->request->getQuery('mail_address').'%';
 			}
 			if ($this->request->getQuery('role') != '' && $this->request->getQuery('role') != '-1') {
 				$conditions['role'] = $this->request->getQuery('role');
@@ -92,9 +92,7 @@ class TeamsController extends AppController
 	public function view($id = null)
 	{
 		$this->viewBuilder()->setLayout('my_layout');
-		$team = $this->Teams->get($id, [
-			'contain' => []
-		]);
+		$team = $this->Teams->get($id, ['contain' => []]);
 
 		$this->set('team', $team);
 	}
@@ -113,7 +111,7 @@ class TeamsController extends AppController
 			$team = $this->Teams->patchEntity($team, $this->request->getData());
 
 			// ファイルのアップロード処理
-			$dir = realpath(WWW_ROOT . "/upload_img");
+			$dir = realpath(WWW_ROOT."/upload_img");
 
 			try {
 				//カバーイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
@@ -123,7 +121,7 @@ class TeamsController extends AppController
 					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
 					if ($cover_image_path['tmp_name'] != '') {
 						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, UPLOAD_COVER_IMAGE_CAPACITY);
-						$team->cover_image_path = '/upload_img/' . $uploadedFileName;
+						$team->cover_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$team->cover_image_path = null;
 					}
@@ -134,7 +132,7 @@ class TeamsController extends AppController
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
 						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, UPLOAD_ICON_IMAGE_CAPACITY);
-						$team->icon_image_path = '/upload_img/' . $uploadedFileName;
+						$team->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$team->icon_image_path = null;
 					}
@@ -187,14 +185,12 @@ class TeamsController extends AppController
 	public function edit($id = null)
 	{
 		$this->viewBuilder()->setLayout('editor_layout');
-		$team = $this->Teams->get($id, [
-			'contain' => []
-		]);
+		$team = $this->Teams->get($id, ['contain' => []]);
 		if ($this->request->is(['patch', 'post', 'put'])) {
 			$team = $this->Teams->patchEntity($team, $this->request->getData());
 
 			// ファイルのアップロード処理
-			$dir = realpath(WWW_ROOT . "/upload_img");
+			$dir = realpath(WWW_ROOT."/upload_img");
 
 			try {
 				//カバーイメージの物理ファイルを保存フォルダへ移動し、データベースへそのパスを登録する。
@@ -204,7 +200,7 @@ class TeamsController extends AppController
 					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
 					if ($cover_image_path['tmp_name'] != '') {
 						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir, UPLOAD_COVER_IMAGE_CAPACITY);
-						$team->cover_image_path = '/upload_img/' . $uploadedFileName;
+						$team->cover_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$team->cover_image_path = null;
 					}
@@ -215,7 +211,7 @@ class TeamsController extends AppController
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
 						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir, UPLOAD_ICON_IMAGE_CAPACITY);
-						$team->icon_image_path = '/upload_img/' . $uploadedFileName;
+						$team->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$team->icon_image_path = null;
 					}
@@ -306,20 +302,15 @@ class TeamsController extends AppController
 			}
 
 			// ファイルタイプのチェックし、拡張子を取得
-			if (false === $ext = array_search($fileInfo->mime(),
-					['jpg' => 'image/jpeg',
-						'jpeg' => 'image/jpeg',
-						'png' => 'image/png',
-						'gif' => 'image/gif',],
-					true)) {
+			if (false === $ext = array_search($fileInfo->mime(), ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'gif' => 'image/gif',], true)) {
 				throw new RuntimeException('画像ファイル以外がアップロードされました。');
 			}
 
 			// ファイル名の生成
-			$uploadFile = sha1_file($file["tmp_name"]) . "." . $ext;
+			$uploadFile = sha1_file($file["tmp_name"]).".".$ext;
 
 			// ファイルの移動
-			if (!move_uploaded_file($file["tmp_name"], $dir . "/" . $uploadFile)) {
+			if (!move_uploaded_file($file["tmp_name"], $dir."/".$uploadFile)) {
 				throw new RuntimeException('Failed to move uploaded file.');
 			}
 		} catch (RuntimeException $e) {
@@ -333,14 +324,13 @@ class TeamsController extends AppController
 	 * @param null $id
 	 * @return mixed
 	 */
-	public function deleteCoverImage($id = null) {
-		$team = $this->Teams->get($id, [
-			'contain' => []
-		]);
+	public function deleteCoverImage($id = null)
+	{
+		$team = $this->Teams->get($id, ['contain' => []]);
 
 		if ($team->cover_image_path != '') {
-			if (file_exists ( WWW_ROOT . $team->cover_image_path )) {
-				unlink(WWW_ROOT . $team->cover_image_path);
+			if (file_exists(WWW_ROOT.$team->cover_image_path)) {
+				unlink(WWW_ROOT.$team->cover_image_path);
 			}
 		}
 
@@ -360,14 +350,13 @@ class TeamsController extends AppController
 	 * @param null $id
 	 * @return mixed
 	 */
-	public function deleteIcon($id = null) {
-		$team = $this->Teams->get($id, [
-			'contain' => []
-		]);
+	public function deleteIcon($id = null)
+	{
+		$team = $this->Teams->get($id, ['contain' => []]);
 
 		if ($team->icon_image_path != '') {
-			if (file_exists ( WWW_ROOT . $team->icon_image_path )) {
-				unlink(WWW_ROOT . $team->icon_image_path);
+			if (file_exists(WWW_ROOT.$team->icon_image_path)) {
+				unlink(WWW_ROOT.$team->icon_image_path);
 			}
 		}
 

@@ -94,7 +94,7 @@
 			<?php
 		}
 		?>
-		
+
 		<li class="dropdown notification-list">
 			<a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#"
 				 role="button" aria-haspopup="false" aria-expanded="false">
@@ -129,7 +129,8 @@
 					?>
 					<!-- item-->
 					<a
-						href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->session()->read('Auth.User.id')]); ?>"
+						href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->session()
+							->read('Auth.User.id')]); ?>"
 						class="dropdown-item notify-item">
 						<i class="fe-user"></i>
 						<span>アカウント情報</span>
@@ -137,7 +138,8 @@
 
 					<!-- item-->
 					<a
-						href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit', $this->request->session()->read('Auth.User.id')]); ?>"
+						href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit', $this->request->session()
+							->read('Auth.User.id')]); ?>"
 						class="dropdown-item notify-item">
 						<i class="fe-settings"></i>
 						<span>アカウント設定</span>
@@ -151,7 +153,8 @@
 				if ($this->request->session()->check('Auth')) {
 					?>
 					<a
-						href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->session()->read('Auth.User.id')]); ?>"
+						href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->session()
+							->read('Auth.User.id')]); ?>"
 						class="dropdown-item notify-item">
 						<i class="fe-user"></i>
 						<span>ユーザー情報</span>
@@ -163,7 +166,8 @@
 						<span>ログアウト</span>
 					</a>
 					<a
-						href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'unsubscribe', $this->request->session()->read('Auth.User.id')]); ?>"
+						href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'unsubscribe', $this->request->session()
+							->read('Auth.User.id')]); ?>"
 						class="dropdown-item notify-item">
 						<i class="fe-trash"></i>
 						<span>退会する</span>

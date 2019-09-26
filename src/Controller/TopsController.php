@@ -54,10 +54,10 @@ class TopsController extends AppController
 		//検索条件のクリアが選択された場合は全件検索をする
 		if ($this->request->getQuery('submit_btn') == 'clear') {
 			$events = $this->paginate(TableRegistry::get('Events')->find('all', ['order' => $sort]));
-//				$events = $this->paginate($this->Events->find('all', ['order' => $sort]));
+			//				$events = $this->paginate($this->Events->find('all', ['order' => $sort]));
 		} else {
 			if ($this->request->getQuery('mail_address') != '') {
-				$conditions['mail_address like'] = '%' . $this->request->getQuery('mail_address') . '%';
+				$conditions['mail_address like'] = '%'.$this->request->getQuery('mail_address').'%';
 			}
 			// 地域で絞り込み
 			if ($this->request->getQuery('region') != '' && $this->request->getQuery('region') != '-1') {
@@ -67,8 +67,9 @@ class TopsController extends AppController
 			if ($this->request->getQuery('prefecture') != '' && $this->request->getQuery('prefecture') != '-1') {
 				$conditions['prefecture'] = $this->request->getQuery('prefecture');
 			}
-			$events = $this->paginate(TableRegistry::get('Events')->find('all', ['order' => $sort, 'conditions' => $conditions]));
-//				$events = $this->paginate($this->Events->find('all', ['order' => $sort, 'conditions' => $conditions]));
+			$events = $this->paginate(TableRegistry::get('Events')
+				->find('all', ['order' => $sort, 'conditions' => $conditions]));
+			//				$events = $this->paginate($this->Events->find('all', ['order' => $sort, 'conditions' => $conditions]));
 		}
 
 		$this->set(compact('events'));

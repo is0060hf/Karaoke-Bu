@@ -179,7 +179,8 @@
 					$('#prefecture').prop('disabled', false);
 				}
 
-				for (const element in data.result) {;
+				for (const element in data.result) {
+					;
 					if (prefecture === data.result[element]['prefectureCode']) {
 						$('#prefecture').append($('<option>').text(data.result[element]['prefectureValue']).attr('value', data.result[element]['prefectureCode']).prop('selected', true));
 					} else {

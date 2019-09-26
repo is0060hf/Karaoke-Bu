@@ -1,8 +1,7 @@
 <?php
+
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -24,67 +23,49 @@ use Cake\Validation\Validator;
  */
 class StoresTable extends Table
 {
-    /**
-     * Initialize method
-     *
-     * @param array $config The configuration for the Table.
-     * @return void
-     */
-    public function initialize(array $config)
-    {
-        parent::initialize($config);
+	/**
+	 * Initialize method
+	 *
+	 * @param array $config The configuration for the Table.
+	 * @return void
+	 */
+	public function initialize(array $config)
+	{
+		parent::initialize($config);
 
-        $this->setTable('stores');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey('id');
+		$this->setTable('stores');
+		$this->setDisplayField('id');
+		$this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
+		$this->addBehavior('Timestamp');
 
-        $this->hasMany('StoreImages', [
-            'foreignKey' => 'store_id'
-        ]);
-    }
+		$this->hasMany('StoreImages', ['foreignKey' => 'store_id']);
+	}
 
-    /**
-     * Default validation rules.
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
-     */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->integer('id')
-            ->allowEmptyString('id', null, 'create');
+	/**
+	 * Default validation rules.
+	 *
+	 * @param \Cake\Validation\Validator $validator Validator instance.
+	 * @return \Cake\Validation\Validator
+	 */
+	public function validationDefault(Validator $validator)
+	{
+		$validator->integer('id')->allowEmptyString('id', null, 'create');
 
-        $validator
-            ->scalar('store_name')
-            ->maxLength('store_name', 256)
-            ->requirePresence('store_name', 'create')
-            ->notEmptyString('store_name');
+		$validator->scalar('store_name')->maxLength('store_name', 256)->requirePresence('store_name', 'create')
+			->notEmptyString('store_name');
 
-        $validator
-            ->scalar('store_url')
-            ->maxLength('store_url', 512)
-            ->requirePresence('store_url', 'create')
-            ->notEmptyString('store_url');
+		$validator->scalar('store_url')->maxLength('store_url', 512)->requirePresence('store_url', 'create')
+			->notEmptyString('store_url');
 
-        $validator
-            ->scalar('region')
-            ->maxLength('region', 64)
-            ->requirePresence('region', 'create')
-            ->notEmptyString('region');
+		$validator->scalar('region')->maxLength('region', 64)->requirePresence('region', 'create')
+			->notEmptyString('region');
 
-        $validator
-            ->scalar('prefecture')
-            ->maxLength('prefecture', 32)
-            ->requirePresence('prefecture', 'create')
-            ->notEmptyString('prefecture');
+		$validator->scalar('prefecture')->maxLength('prefecture', 32)->requirePresence('prefecture', 'create')
+			->notEmptyString('prefecture');
 
-        $validator
-            ->integer('owner_user')
-            ->allowEmptyString('owner_user');
+		$validator->integer('owner_user')->allowEmptyString('owner_user');
 
-        return $validator;
-    }
+		return $validator;
+	}
 }

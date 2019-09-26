@@ -16,82 +16,29 @@
 
 <div class="users form large-9 medium-8 columns content">
 	<?php
-	$form_template = array(
-		'error' => '<div class="col-sm-12 error-message alert alert-danger mt-2 mb-0 py-1">{{content}}</div>',
-		'nestingLabel' => '{{hidden}}{{input}}<label{{attrs}}>{{text}}</label>',
-		'formGroup' => '<div class="col-sm-2">{{label}}</div><div class="col-sm-10">{{input}}</div>',
-		'dateWidget' => '{{year}} 年 {{month}} 月 {{day}} 日  {{hour}}時{{minute}}分',
-		'select' => '<select name="{{name}}"{{attrs}} data-toggle="{{select_toggle}}">{{content}}</select>',
-		'inputContainer' => '<div class="input {{type}}{{required}} {{div_class}}" data-toggle="{{div_tooltip}}" data-placement="{{div_tooltip_placement}}" data-original-title="{{div_tooltip_title}}">{{content}}</div>',
-		'inputContainerError' => '<div class="input {{type}}{{required}} error {{div_class}}" data-toggle="{{div_tooltip}}" data-placement="{{div_tooltip_placement}}" data-original-title="{{div_tooltip_title}}">{{content}}{{error}}</div>',
-	);
+	$form_template = array('error' => '<div class="col-sm-12 error-message alert alert-danger mt-2 mb-0 py-1">{{content}}</div>', 'nestingLabel' => '{{hidden}}{{input}}<label{{attrs}}>{{text}}</label>', 'formGroup' => '<div class="col-sm-2">{{label}}</div><div class="col-sm-10">{{input}}</div>', 'dateWidget' => '{{year}} 年 {{month}} 月 {{day}} 日  {{hour}}時{{minute}}分', 'select' => '<select name="{{name}}"{{attrs}} data-toggle="{{select_toggle}}">{{content}}</select>', 'inputContainer' => '<div class="input {{type}}{{required}} {{div_class}}" data-toggle="{{div_tooltip}}" data-placement="{{div_tooltip_placement}}" data-original-title="{{div_tooltip_title}}">{{content}}</div>', 'inputContainerError' => '<div class="input {{type}}{{required}} error {{div_class}}" data-toggle="{{div_tooltip}}" data-placement="{{div_tooltip_placement}}" data-original-title="{{div_tooltip_title}}">{{content}}{{error}}</div>',);
 	?>
 
-	<?= $this->Form->create($team, array(
-		'templates' => $form_template,
-		'type' => 'file'
-	)); ?>
+	<?= $this->Form->create($team, array('templates' => $form_template, 'type' => 'file')); ?>
 	<fieldset>
 		<legend><?= __('新規チーム登録') ?></legend>
 		<?php
-		echo $this->Form->control('team_name', array(
-			'label' => array(
-				'text' => 'チーム名',       // labelで出力するテキスト
-				'class' => 'col-form-label' // labelタグのクラス名
-			),
-			'type' => 'text',
-			'templateVars' => array(
-				'div_class' => 'form-group row',
-				'div_tooltip' => 'tooltip',
-				'div_tooltip_placement' => 'top',
-				'div_tooltip_title' => 'チーム名を入力してください'
-			),
-			'class' => 'form-control'      // inputタグのクラス名
+		echo $this->Form->control('team_name', array('label' => array('text' => 'チーム名',       // labelで出力するテキスト
+			'class' => 'col-form-label' // labelタグのクラス名
+		), 'type' => 'text', 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => 'チーム名を入力してください'), 'class' => 'form-control'      // inputタグのクラス名
 		));
 
-		echo $this->Form->control('introduction', array(
-			'label' => array(
-				'text' => '一言紹介文',       // labelで出力するテキスト
-				'class' => 'col-form-label' // labelタグのクラス名
-			),
-			'type' => 'text',
-			'templateVars' => array(
-				'div_class' => 'form-group row',
-				'div_tooltip' => 'tooltip',
-				'div_tooltip_placement' => 'top',
-				'div_tooltip_title' => '他のユーザーに公開する自己紹介分を、一言お願いしいます。'
-			),
-			'class' => 'form-control'      // inputタグのクラス名
+		echo $this->Form->control('introduction', array('label' => array('text' => '一言紹介文',       // labelで出力するテキスト
+			'class' => 'col-form-label' // labelタグのクラス名
+		), 'type' => 'text', 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => '他のユーザーに公開する自己紹介分を、一言お願いしいます。'), 'class' => 'form-control'      // inputタグのクラス名
 		));
-		echo $this->Form->control('cover_image_path', array(
-			'label' => array(
-				'text' => 'カバー画像',       // labelで出力するテキスト
-				'class' => 'col-form-label' // labelタグのクラス名
-			),
-			'type' => 'file',
-			'templateVars' => array(
-				'div_class' => 'form-group row',
-				'div_tooltip' => 'tooltip',
-				'div_tooltip_placement' => 'top',
-				'div_tooltip_title' => 'カバー画像をアップロードしてください。'
-			),
-			'id' => 'cover_image_path',
-			'class' => 'form-control'      // inputタグのクラス名
+		echo $this->Form->control('cover_image_path', array('label' => array('text' => 'カバー画像',       // labelで出力するテキスト
+			'class' => 'col-form-label' // labelタグのクラス名
+		), 'type' => 'file', 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => 'カバー画像をアップロードしてください。'), 'id' => 'cover_image_path', 'class' => 'form-control'      // inputタグのクラス名
 		));
-		echo $this->Form->control('icon_image_path', array(
-			'label' => array(
-				'text' => 'アイコン',       // labelで出力するテキスト
-				'class' => 'col-form-label' // labelタグのクラス名
-			),
-			'type' => 'file',
-			'templateVars' => array(
-				'div_class' => 'form-group row',
-				'div_tooltip' => 'tooltip',
-				'div_tooltip_placement' => 'top',
-				'div_tooltip_title' => 'チームアイコンをアップロードしてください。'
-			),
-			'id' => 'icon_image_path',
-			'class' => 'form-control'      // inputタグのクラス名
+		echo $this->Form->control('icon_image_path', array('label' => array('text' => 'アイコン',       // labelで出力するテキスト
+			'class' => 'col-form-label' // labelタグのクラス名
+		), 'type' => 'file', 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => 'チームアイコンをアップロードしてください。'), 'id' => 'icon_image_path', 'class' => 'form-control'      // inputタグのクラス名
 		));
 		?>
 	</fieldset>

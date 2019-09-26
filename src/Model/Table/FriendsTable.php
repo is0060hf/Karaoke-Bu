@@ -1,8 +1,7 @@
 <?php
+
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -22,45 +21,37 @@ use Cake\Validation\Validator;
  */
 class FriendsTable extends Table
 {
-    /**
-     * Initialize method
-     *
-     * @param array $config The configuration for the Table.
-     * @return void
-     */
-    public function initialize(array $config)
-    {
-        parent::initialize($config);
+	/**
+	 * Initialize method
+	 *
+	 * @param array $config The configuration for the Table.
+	 * @return void
+	 */
+	public function initialize(array $config)
+	{
+		parent::initialize($config);
 
-        $this->setTable('friends');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey('id');
+		$this->setTable('friends');
+		$this->setDisplayField('id');
+		$this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
-    }
+		$this->addBehavior('Timestamp');
+	}
 
-    /**
-     * Default validation rules.
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
-     */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->integer('id')
-            ->allowEmptyString('id', null, 'create');
+	/**
+	 * Default validation rules.
+	 *
+	 * @param \Cake\Validation\Validator $validator Validator instance.
+	 * @return \Cake\Validation\Validator
+	 */
+	public function validationDefault(Validator $validator)
+	{
+		$validator->integer('id')->allowEmptyString('id', null, 'create');
 
-        $validator
-            ->integer('src_friend')
-            ->requirePresence('src_friend', 'create')
-            ->notEmptyString('src_friend');
+		$validator->integer('src_friend')->requirePresence('src_friend', 'create')->notEmptyString('src_friend');
 
-        $validator
-            ->integer('dest_friend')
-            ->requirePresence('dest_friend', 'create')
-            ->notEmptyString('dest_friend');
+		$validator->integer('dest_friend')->requirePresence('dest_friend', 'create')->notEmptyString('dest_friend');
 
-        return $validator;
-    }
+		return $validator;
+	}
 }
