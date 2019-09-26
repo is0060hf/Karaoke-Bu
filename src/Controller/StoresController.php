@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Util\ModelUtil;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Settings;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 
 /**
@@ -28,7 +28,7 @@ class StoresController extends AppController
 	public function beforeFilter(Event $event)
 	{
 		parent::beforeFilter($event);
-		$this->Auth->allow(['index','view']);
+		$this->Auth->allow(['index', 'view']);
 	}
 
 	/**
@@ -40,7 +40,7 @@ class StoresController extends AppController
 	 */
 	public function isAuthorized($user)
 	{
-		if (in_array($this->request->getParam('action'), ['index','view','add','edit','delete'])) {
+		if (in_array($this->request->getParam('action'), ['index', 'view', 'add', 'edit', 'delete'])) {
 			return true;
 		}
 
@@ -77,7 +77,7 @@ class StoresController extends AppController
 			$stores = $this->paginate($this->Stores->find('all', ['order' => $sort]));
 		} else {
 			if ($this->request->getQuery('mail_address') != '') {
-				$conditions['mail_address like'] = '%' . $this->request->getQuery('mail_address') . '%';
+				$conditions['mail_address like'] = '%'.$this->request->getQuery('mail_address').'%';
 			}
 			if ($this->request->getQuery('role') != '' && $this->request->getQuery('role') != '-1') {
 				$conditions['role'] = $this->request->getQuery('role');
@@ -102,9 +102,7 @@ class StoresController extends AppController
 	public function view($id = null)
 	{
 		$this->viewBuilder()->setLayout('my_layout');
-		$store = $this->Stores->get($id, [
-			'contain' => []
-		]);
+		$store = $this->Stores->get($id, ['contain' => []]);
 
 		$this->set(compact('store'));
 	}
@@ -152,9 +150,7 @@ class StoresController extends AppController
 	public function edit($id = null)
 	{
 		$this->viewBuilder()->setLayout('editor_layout');
-		$store = $this->Stores->get($id, [
-			'contain' => []
-		]);
+		$store = $this->Stores->get($id, ['contain' => []]);
 
 		if ($this->request->is(['patch', 'post', 'put'])) {
 			$store = $this->Stores->patchEntity($store, $this->request->getData());
@@ -204,10 +200,11 @@ class StoresController extends AppController
 	 *
 	 * @param null $storeId
 	 */
-	public function addImage($storeId = null){
+	public function addImage($storeId = null)
+	{
 		$this->request->allowMethod(['post']);
 
-		if($storeId){
+		if ($storeId) {
 			$storeImageEntity = TableRegistry::get('StoreImages');
 			$storeImage = $storeImageEntity->newEntity();
 			$storeImage = $storeImageEntity->patchEntity($storeImage, $this->request->getData());

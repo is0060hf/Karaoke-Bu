@@ -23,19 +23,9 @@
 		<legend><?= __('退会処理') ?></legend>
 		<p>一度退会すると、このユーザーに関する全てのデータが消え、元に戻すことはできなくなります。</p>
 		<?php
-		echo $this->Form->control('password', array(
-			'label' => array(
-				'text' => 'パスワード',       // labelで出力するテキスト
-				'class' => 'col-form-label' // labelタグのクラス名
-			),
-			'type' => 'password',
-			'templateVars' => array(
-				'div_class' => 'form-group row',
-				'div_tooltip' => 'tooltip',
-				'div_tooltip_placement' => 'top',
-				'div_tooltip_title' => 'パスワードを入力してください。'
-			),
-			'class' => 'form-control'      // inputタグのクラス名
+		echo $this->Form->control('password', array('label' => array('text' => 'パスワード',       // labelで出力するテキスト
+			'class' => 'col-form-label' // labelタグのクラス名
+		), 'type' => 'password', 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => 'パスワードを入力してください。'), 'class' => 'form-control'      // inputタグのクラス名
 		));
 		?>
 	</fieldset>

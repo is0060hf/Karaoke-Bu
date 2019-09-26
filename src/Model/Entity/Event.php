@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -32,36 +33,14 @@ use Cake\ORM\Entity;
  */
 class Event extends Entity
 {
-    /**
-     * Fields that can be mass assigned using newEntity() or patchEntity().
-     *
-     * Note that when '*' is set to true, this allows all unspecified fields to
-     * be mass assigned. For security purposes, it is advised to set '*' to false
-     * (or remove it), and explicitly make individual fields accessible as needed.
-     *
-     * @var array
-     */
-    protected $_accessible = [
-        'user_id' => true,
-        'title' => true,
-        'body' => true,
-        'entry_template' => true,
-        'drink' => true,
-        'food' => true,
-        'start_time' => true,
-        'end_time' => true,
-        'budget' => true,
-        'deadline' => true,
-        'entry_date' => true,
-        'limited_range' => true,
-        'number_of_people' => true,
-        'region' => true,
-        'prefecture' => true,
-        'phone_number' => true,
-        'created' => true,
-        'modified' => true,
-        'user' => true,
-        'event_comments' => true,
-        'event_entries' => true
-    ];
+	/**
+	 * Fields that can be mass assigned using newEntity() or patchEntity().
+	 *
+	 * Note that when '*' is set to true, this allows all unspecified fields to
+	 * be mass assigned. For security purposes, it is advised to set '*' to false
+	 * (or remove it), and explicitly make individual fields accessible as needed.
+	 *
+	 * @var array
+	 */
+	protected $_accessible = ['user_id' => true, 'title' => true, 'body' => true, 'entry_template' => true, 'drink' => true, 'food' => true, 'start_time' => true, 'end_time' => true, 'budget' => true, 'deadline' => true, 'entry_date' => true, 'limited_range' => true, 'number_of_people' => true, 'region' => true, 'prefecture' => true, 'phone_number' => true, 'created' => true, 'modified' => true, 'user' => true, 'event_comments' => true, 'event_entries' => true];
 }

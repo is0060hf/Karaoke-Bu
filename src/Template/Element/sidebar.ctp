@@ -37,51 +37,51 @@
 							</li>
 						</ul>
 					</li>
-				<li>
-					<a href="javascript: void(0);">
-						<i class="fe-calendar"></i>
-						<span> イベント </span>
-						<span class="menu-arrow"></span>
-					</a>
-					<ul class="nav-second-level" aria-expanded="false">
-						<li>
-							<?= $this->Html->link(__('新規登録'), ['controller' => 'Events', 'action' => 'add']) ?>
-						</li>
-						<li>
-							<?= $this->Html->link(__('イベント一覧'), ['controller' => 'Events', 'action' => 'index']) ?>
-						</li>
-					</ul>
-				</li>
-				<li>
-					<a href="javascript: void(0);">
-						<i class="fe-heart"></i>
-						<span> ともだち </span>
-						<span class="menu-arrow"></span>
-					</a>
-					<ul class="nav-second-level" aria-expanded="false">
-						<li>
-							<?= $this->Html->link(__('ともだち一覧'), ['controller' => 'Friends', 'action' => 'index']) ?>
-						</li>
-					</ul>
-				</li>
-				<li>
-					<a href="javascript: void(0);">
-						<i class="fe-cloud"></i>
-						<span> チーム </span>
-						<span class="menu-arrow"></span>
-					</a>
-					<ul class="nav-second-level" aria-expanded="false">
-						<li>
-							<?= $this->Html->link(__('新規チーム登録'), ['controller' => 'Teams', 'action' => 'add']) ?>
-						</li>
-						<li>
-							<?= $this->Html->link(__('参加チーム一覧'), ['controller' => 'Teams', 'action' => 'index']) ?>
-						</li>
-						<li>
-							<?= $this->Html->link(__('チームランキング'), ['controller' => 'Teams', 'action' => 'index']) ?>
-						</li>
-					</ul>
-				</li>
+					<li>
+						<a href="javascript: void(0);">
+							<i class="fe-calendar"></i>
+							<span> イベント </span>
+							<span class="menu-arrow"></span>
+						</a>
+						<ul class="nav-second-level" aria-expanded="false">
+							<li>
+								<?= $this->Html->link(__('新規登録'), ['controller' => 'Events', 'action' => 'add']) ?>
+							</li>
+							<li>
+								<?= $this->Html->link(__('イベント一覧'), ['controller' => 'Events', 'action' => 'index']) ?>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript: void(0);">
+							<i class="fe-heart"></i>
+							<span> ともだち </span>
+							<span class="menu-arrow"></span>
+						</a>
+						<ul class="nav-second-level" aria-expanded="false">
+							<li>
+								<?= $this->Html->link(__('ともだち一覧'), ['controller' => 'Friends', 'action' => 'index']) ?>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript: void(0);">
+							<i class="fe-cloud"></i>
+							<span> チーム </span>
+							<span class="menu-arrow"></span>
+						</a>
+						<ul class="nav-second-level" aria-expanded="false">
+							<li>
+								<?= $this->Html->link(__('新規チーム登録'), ['controller' => 'Teams', 'action' => 'add']) ?>
+							</li>
+							<li>
+								<?= $this->Html->link(__('参加チーム一覧'), ['controller' => 'Teams', 'action' => 'index']) ?>
+							</li>
+							<li>
+								<?= $this->Html->link(__('チームランキング'), ['controller' => 'Teams', 'action' => 'index']) ?>
+							</li>
+						</ul>
+					</li>
 					<?php
 				}
 				?>

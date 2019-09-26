@@ -19,9 +19,9 @@
 		<div class="col-12">
 			<div class="user_cover_div_wrapper">
 				<?php if (isset($user->cover_image_path)) { ?>
-					<div class="user_cover_div" style="background-image: url(<?= $user->cover_image_path ?>)">	</div>
+					<div class="user_cover_div" style="background-image: url(<?= $user->cover_image_path ?>)"></div>
 				<?php } else { ?>
-					<div class="user_cover_div" style="background-image: url('/assets/images/cover.png')">	</div>
+					<div class="user_cover_div" style="background-image: url('/assets/images/cover.png')"></div>
 				<?php } ?>
 			</div>
 			<div class="rellax_icon" data-rellax-speed="1">
@@ -75,7 +75,8 @@
 	<div class="row">
 		<div class="col-12 text-center">
 			<?php
-			if ($this->request->session()->read('Auth.User.role') == ROLE_SYSTEM || $this->request->session()->read('Auth.User.id') == $user->id) {
+			if ($this->request->session()->read('Auth.User.role') == ROLE_SYSTEM || $this->request->session()
+					->read('Auth.User.id') == $user->id) {
 				?>
 				<a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'edit', $user->id]); ?>"
 					 class="btn btn-success mr-3">

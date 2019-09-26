@@ -22,47 +22,17 @@
 	<fieldset>
 		<legend><?= __('パスワード更新') ?></legend>
 		<?php
-		echo $this->Form->control('old_password', array(
-			'label' => array(
-				'text' => '旧パスワード',       // labelで出力するテキスト
-				'class' => 'col-form-label' // labelタグのクラス名
-			),
-			'type' => 'password',
-			'templateVars' => array(
-				'div_class' => 'form-group row',
-				'div_tooltip' => 'tooltip',
-				'div_tooltip_placement' => 'top',
-				'div_tooltip_title' => '今まで使用していたパスワードを入力してください。'
-			),
-			'class' => 'form-control'      // inputタグのクラス名
+		echo $this->Form->control('old_password', array('label' => array('text' => '旧パスワード',       // labelで出力するテキスト
+			'class' => 'col-form-label' // labelタグのクラス名
+		), 'type' => 'password', 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => '今まで使用していたパスワードを入力してください。'), 'class' => 'form-control'      // inputタグのクラス名
 		));
-		echo $this->Form->control('password', array(
-			'label' => array(
-				'text' => '新パスワード',       // labelで出力するテキスト
-				'class' => 'col-form-label' // labelタグのクラス名
-			),
-			'type' => 'password',
-			'templateVars' => array(
-				'div_class' => 'form-group row',
-				'div_tooltip' => 'tooltip',
-				'div_tooltip_placement' => 'top',
-				'div_tooltip_title' => '新しく設定するパスワードを入力してください。'
-			),
-			'class' => 'form-control'      // inputタグのクラス名
+		echo $this->Form->control('password', array('label' => array('text' => '新パスワード',       // labelで出力するテキスト
+			'class' => 'col-form-label' // labelタグのクラス名
+		), 'type' => 'password', 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => '新しく設定するパスワードを入力してください。'), 'class' => 'form-control'      // inputタグのクラス名
 		));
-		echo $this->Form->control('confirm_password', array(
-			'label' => array(
-				'text' => '新パスワード（確認用）',       // labelで出力するテキスト
-				'class' => 'col-form-label' // labelタグのクラス名
-			),
-			'type' => 'password',
-			'templateVars' => array(
-				'div_class' => 'form-group row',
-				'div_tooltip' => 'tooltip',
-				'div_tooltip_placement' => 'top',
-				'div_tooltip_title' => '新しく設定するパスワードを再度入力してください。'
-			),
-			'class' => 'form-control'      // inputタグのクラス名
+		echo $this->Form->control('confirm_password', array('label' => array('text' => '新パスワード（確認用）',       // labelで出力するテキスト
+			'class' => 'col-form-label' // labelタグのクラス名
+		), 'type' => 'password', 'templateVars' => array('div_class' => 'form-group row', 'div_tooltip' => 'tooltip', 'div_tooltip_placement' => 'top', 'div_tooltip_title' => '新しく設定するパスワードを再度入力してください。'), 'class' => 'form-control'      // inputタグのクラス名
 		));
 		?>
 	</fieldset>

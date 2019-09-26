@@ -12,10 +12,10 @@
 	<link rel="shortcut icon" href="/assets/images/favicon.ico">
 
 	<!-- Sweet Alert-->
-	<link href="/css/vendor/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+	<link href="/css/vendor/sweetalert2.min.css" rel="stylesheet" type="text/css"/>
 
 	<!-- Notification css (Toastr) -->
-	<link href="/css/vendor/toastr.min.css" rel="stylesheet" type="text/css" />
+	<link href="/css/vendor/toastr.min.css" rel="stylesheet" type="text/css"/>
 
 	<!-- App css -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
