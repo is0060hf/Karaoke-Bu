@@ -99,6 +99,20 @@ foreach ($userList as $usr) {
 								'class' => 'form-control',
 								// inputタグのクラス名
 							));
+							echo $this->Form->control('keyword', array('label' => array('text' => 'キーワード',
+								// labelで出力するテキスト
+								'class' => 'col-form-label'
+								// labelタグのクラス名
+							),
+								'type' => 'text',
+								'templateVars' => array('div_class' => 'form-group row',
+									'div_tooltip' => 'tooltip',
+									'div_tooltip_placement' => 'top',
+									'div_tooltip_title' => '検索したいキーワードを入力してください。'),
+								'value' => $this->request->getQuery('keyword'),
+								'class' => 'form-control'
+								// inputタグのクラス名
+							));
 							?>
 
 							<div class="row my-2">

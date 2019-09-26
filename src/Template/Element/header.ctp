@@ -206,9 +206,10 @@
 			</button>
 		</li>
 		<li class="app-search d-none d-sm-block">
-			<form>
+			<form action="<?= $this->Url->build(['controller' => 'Tops',
+				'action' => 'event']); ?>" method="get">
 				<div class="input-group">
-					<input type="text" class="form-control" placeholder="イベントを探す...">
+					<input type="text" class="form-control" placeholder="イベントを探す..." name="keyword">
 					<div class="input-group-append">
 						<button class="btn btn-dark" type="submit">
 							<i class="fe-search"></i>

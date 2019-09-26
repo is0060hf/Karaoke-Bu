@@ -89,8 +89,10 @@ class TopsController extends AppController {
 			$events = $this->paginate(TableRegistry::get('Events')->find('all', ['order' => $sort]));
 			//				$events = $this->paginate($this->Events->find('all', ['order' => $sort]));
 		} else {
-			if ($this->request->getQuery('mail_address') != '') {
-				$conditions['mail_address like'] = '%'.$this->request->getQuery('mail_address').'%';
+			if ($this->request->getQuery('keyword') != '') {
+				$conditions['OR'] = [];
+				$conditions['OR']['title like'] = '%'.$this->request->getQuery('keyword').'%';
+				$conditions['OR']['body like'] = '%'.$this->request->getQuery('keyword').'%';
 			}
 			// 地域で絞り込み
 			if ($this->request->getQuery('region') != '' && $this->request->getQuery('region') != '-1') {
