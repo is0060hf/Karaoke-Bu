@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Utils\FileUtil;
-use Cake\Core\App;
+use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Http\Response;
 use Cake\I18n\Time;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -40,7 +41,8 @@ class UserNoticesController extends AppController {
 	 */
 	public function isAuthorized($user) {
 		// 誰でも許可するアクション
-		if (in_array($this->request->getParam('action'), ['myNotice'])) {
+		if (in_array($this->request->getParam('action'), ['myNotice',
+			'view'])) {
 			return true;
 		}
 
@@ -107,7 +109,7 @@ class UserNoticesController extends AppController {
 		$this->viewBuilder()->setLayout('editor_layout');
 
 		$conditions = [];
-		$conditions['from_user_id'] = $this->request->session()->read('Auth.User.id');
+
 		$sort = ['created' => 'desc'];
 
 		if ($this->request->getQuery('sort') && $this->request->getQuery('direction')) {
@@ -116,7 +118,7 @@ class UserNoticesController extends AppController {
 
 		//検索条件のクリアが選択された場合は全件検索をする
 		if ($this->request->getQuery('submit_btn') == 'clear') {
-			$userNotices = $this->paginate($this->UserNotices->find('all', ['order' => $sort]));
+			$userNotices = $this->UserNotices->find('all', ['order' => $sort]);
 		} else {
 			if ($this->request->getQuery('user_id') != '') {
 				$conditions['user_id'] = $this->request->getQuery('user_id');
@@ -125,14 +127,26 @@ class UserNoticesController extends AppController {
 				$conditions['from_user_id'] = $this->request->getQuery('from_user_id');
 			}
 			if ($this->request->getQuery('notice_date_start') != '') {
-				$conditions['notice_date >='] = $this->request->getQuery('notice_date_start');
+				$conditions['send_date >='] = $this->request->getQuery('notice_date_start');
 			}
 			if ($this->request->getQuery('notice_date_end') != '') {
-				$conditions['notice_date <='] = $this->request->getQuery('notice_date_end');
+				$conditions['send_date <='] = $this->request->getQuery('notice_date_end');
 			}
-			$userNotices = $this->paginate($this->UserNotices->find('all', ['order' => $sort,
-				'conditions' => $conditions]));
+			$userNotices = $this->UserNotices->find('all', ['order' => $sort,
+				'conditions' => $conditions]);
 		}
+
+		// 通知日が現在時刻より後の物で絞り込む
+		$userNotices = $userNotices->where(['send_date <' => Time::now()]);
+
+		// ログインユーザーに通知されているものだけで絞り込む
+		$userNoticeFlagIds = TableRegistry::get('UserNoticeFlags')->find('All')
+			->where(['user_id' => $this->request->session()->read('Auth.User.id')])->order(['created' => 'ASC'])
+			->extract('user_notice_id')->toList();
+		$userNotices = $this->paginate($userNotices->where(function (QueryExpression $exp, Query $q) use ($userNoticeFlagIds
+		) {
+			return $exp->in('id', $userNoticeFlagIds);
+		}));
 
 		$this->set(compact('userNotices'));
 	}
@@ -149,16 +163,34 @@ class UserNoticesController extends AppController {
 	 */
 	public function view($id = null) {
 		$this->viewBuilder()->setLayout('my_layout');
+		// ログインユーザーに通知されているものだけで絞り込む
 		$userNotice = $this->UserNotices->get($id, ['contain' => []]);
+		$userNoticeFlagTable = TableRegistry::get('UserNoticeFlags');
+		$userNoticeFlag = $userNoticeFlagTable->find('All')->where(['user_id' => $this->request->session()
+			->read('Auth.User.id'),
+			'user_notice_id' => $id])->first();
 
-		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM && $this->request->session()
-				->read('Auth.User.id') != $userNotice->from_user_id) {
-			$this->Flash->error(__('ご指定の操作は権限がありません。'));
-			return $this->redirect(['controller' => 'pages',
-				'action' => 'error_user_roll']);
+		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM) {
+			if (is_null($userNoticeFlag)) {
+				$this->Flash->error(__('閲覧権限のない通知へのアクセスです。'));
+				return $this->redirect(['controller' => 'pages',
+					'action' => 'error_user_roll']);
+			}
+
+			$sendDate = new Time($userNotice->send_date);
+			if ($sendDate->gt(Time::now())) {
+				$this->Flash->error(__('まだ公開前の通知へのアクセスです。'));
+				return $this->redirect(['controller' => 'pages',
+					'action' => 'error_user_roll']);
+			}
 		}
 
-		$this->set('team', $userNotice);
+		if (!$userNoticeFlag->open_flg) {
+			$userNoticeFlag->open_flg = true;
+			$userNoticeFlagTable->save($userNoticeFlag);
+		}
+
+		$this->set(compact('userNotice'));
 	}
 
 	/**

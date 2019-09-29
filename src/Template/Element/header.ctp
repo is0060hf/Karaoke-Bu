@@ -1,5 +1,8 @@
 <?php
 
+use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\Time;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 ?>
@@ -10,14 +13,25 @@ use Cake\ORM\TableRegistry;
 
 		<?php
 		if ($this->request->session()->check('Auth')) {
-			$userNoticeFlags = TableRegistry::get('UserNoticeFlags')->find('All')
-				->where(['user_id' => $this->request->session()->read('Auth.User.id')])->order(['created' => 'ASC'])->all();
+			$userNoticeFlagIds = TableRegistry::get('UserNoticeFlags')->find('All')
+				->where(['user_id' => $this->request->session()->read('Auth.User.id'),
+					'open_flg' => false])->order(['created' => 'ASC'])->extract('user_notice_id')->toList();
+			$userNotices = TableRegistry::get('UserNotices')->find('All')->where(['send_date <' => Time::now()]);
+			$userNotices = $userNotices->where(function (QueryExpression $exp, Query $q) use ($userNoticeFlagIds) {
+				return $exp->in('id', $userNoticeFlagIds);
+			});
 			?>
 			<li class="dropdown notification-list">
 				<a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button"
 					 aria-haspopup="false" aria-expanded="false">
 					<i class="fe-bell noti-icon"></i>
-					<span class="badge badge-danger rounded-circle noti-icon-badge"><?= $userNoticeFlags->count() ?></span>
+					<?php
+					if ($userNotices->count() > 0) {
+						?>
+						<span class="badge badge-danger rounded-circle noti-icon-badge"><?= $userNotices->count() ?></span>
+						<?php
+					}
+					?>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right dropdown-lg">
 
@@ -34,9 +48,7 @@ use Cake\ORM\TableRegistry;
 
 					<div class="slimscroll noti-scroll">
 						<?php
-						foreach ($userNoticeFlags as $userNoticeFlag) {
-							$userNotice = TableRegistry::get('UserNotices')->find('All')
-								->where(['id' => $userNoticeFlag->user_notice_id])->first();
+						foreach ($userNotices as $userNotice) {
 							?>
 							<a href="<?php echo $this->Url->build(['controller' => 'UserNotices',
 								'action' => 'view',
@@ -61,12 +73,25 @@ use Cake\ORM\TableRegistry;
 							</a>
 							<?php
 						}
+
+						if ($userNotices->count() == 0) {
+							?>
+							<a href="javascript:void(0);" class="dropdown-item notify-item active">
+								<div class="notify-icon bg-warning"><i class="mdi mdi-comment-account-outline"></i></div>
+								<p class="notify-details">新規通知はありません</p>
+								<p class="text-muted mb-0 user-msg">
+									<small>全件表示するをクリックすることで既読通知も確認できます。</small>
+								</p>
+							</a>
+							<?php
+						}
 						?>
 					</div>
 
 					<!-- All-->
-					<a href="javascript:void(0);" class="dropdown-item text-center text-primary notify-item notify-all">
-						View all
+					<a href="<?php echo $this->Url->build(['controller' => 'UserNotices',
+						'action' => 'myNotice']); ?>" class="dropdown-item text-center text-primary notify-item notify-all">
+						全件表示する
 						<i class="fi-arrow-right"></i>
 					</a>
 
