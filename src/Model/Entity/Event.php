@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -12,11 +11,11 @@ use Cake\ORM\Entity;
  * @property string $title
  * @property string $body
  * @property string|null $entry_template
- * @property string|null $drink
- * @property string|null $food
+ * @property int|null $drink
+ * @property int|null $food
  * @property \Cake\I18n\FrozenTime $start_time
  * @property \Cake\I18n\FrozenTime $end_time
- * @property int $budget
+ * @property string $budget
  * @property \Cake\I18n\FrozenTime $deadline
  * @property \Cake\I18n\FrozenTime $entry_date
  * @property int $limited_range

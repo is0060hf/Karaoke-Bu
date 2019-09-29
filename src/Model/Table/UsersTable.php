@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Model\Table;
 
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -14,6 +14,8 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\EventsTable&\Cake\ORM\Association\HasMany $Events
  * @property \App\Model\Table\TeamPostsTable&\Cake\ORM\Association\HasMany $TeamPosts
  * @property \App\Model\Table\TeamUserLinksTable&\Cake\ORM\Association\HasMany $TeamUserLinks
+ * @property \App\Model\Table\UserNoticeFlagsTable&\Cake\ORM\Association\HasMany $UserNoticeFlags
+ * @property \App\Model\Table\UserNoticesTable&\Cake\ORM\Association\HasMany $UserNotices
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
@@ -47,6 +49,8 @@ class UsersTable extends Table {
 		$this->hasMany('Events', ['foreignKey' => 'user_id']);
 		$this->hasMany('TeamPosts', ['foreignKey' => 'user_id']);
 		$this->hasMany('TeamUserLinks', ['foreignKey' => 'user_id']);
+		$this->hasMany('UserNoticeFlags', ['foreignKey' => 'user_id']);
+		$this->hasMany('UserNotices', ['foreignKey' => 'user_id']);
 	}
 
 	/**
@@ -87,9 +91,9 @@ class UsersTable extends Table {
 
 		$validator->scalar('cover_image_path')->maxLength('cover_image_path', 512)->allowEmptyFile('cover_image_path');
 
-		$validator->integer('region')->allowEmptyString('region');
+		$validator->integer('region')->notEmptyString('region');
 
-		$validator->integer('prefecture')->allowEmptyString('prefecture');
+		$validator->integer('prefecture')->notEmptyString('prefecture');
 
 		return $validator;
 	}

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Util\ModelUtil;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Filesystem\File;

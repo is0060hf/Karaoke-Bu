@@ -91,6 +91,23 @@
 							</li>
 						</ul>
 					</li>
+					<li>
+						<a href="javascript: void(0);">
+							<i class="fe-bell"></i>
+							<span> 通知 </span>
+							<span class="menu-arrow"></span>
+						</a>
+						<ul class="nav-second-level" aria-expanded="false">
+							<li>
+								<?= $this->Html->link(__('新規通知発行'), ['controller' => 'UserNotices',
+									'action' => 'add']) ?>
+							</li>
+							<li>
+								<?= $this->Html->link(__('通知情報一覧'), ['controller' => 'UserNotices',
+									'action' => 'index']) ?>
+							</li>
+						</ul>
+					</li>
 					<?php
 				}
 				?>
