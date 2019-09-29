@@ -1,18 +1,19 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Team $team
+ * @var \App\Model\Entity\UserNotice $userNotice
  */
-?>
+
+use Cake\I18n\Time; ?>
 <div class="breadcrumb_div">
 	<ol class="breadcrumb m-b-20">
 		<li class="breadcrumb-item"><a
-				href="<?php echo $this->Url->build(['controller' => 'Users',
+				href="<?php echo $this->Url->build(['controller' => 'Tops',
 					'action' => 'index']); ?>">Home</a></li>
 		<li class="breadcrumb-item"><a
-				href="<?php echo $this->Url->build(['controller' => 'Teams',
-					'action' => 'index']); ?>">チーム一覧</a></li>
-		<li class="breadcrumb-item active">チーム情報詳細</li>
+				href="<?php echo $this->Url->build(['controller' => 'UserNotices',
+					'action' => 'index']); ?>">通知情報一覧</a></li>
+		<li class="breadcrumb-item active">通知情報詳細</li>
 	</ol>
 </div>
 
@@ -20,15 +21,11 @@
 	<div class="row mb-2">
 		<div class="col-12">
 			<div class="user_cover_div_wrapper">
-				<?php if (isset($team->cover_image_path)) { ?>
-					<div class="user_cover_div" style="background-image: url(<?= $team->cover_image_path ?>)"></div>
-				<?php } else { ?>
-					<div class="user_cover_div" style="background-image: url('/assets/images/cover.png')"></div>
-				<?php } ?>
+				<div class="user_cover_div" style="background-image: url('/assets/images/cover.png')"></div>
 			</div>
 			<div class="rellax_icon" data-rellax-speed="1">
-				<?php if (isset($team->icon_image_path)) { ?>
-					<img src="<?= $team->icon_image_path ?>" alt="user-icon" class="rounded-circle">
+				<?php if (isset($userNotice->icon_image_path)) { ?>
+					<img src="<?= $userNotice->icon_image_path ?>" alt="user-icon" class="rounded-circle">
 				<?php } else { ?>
 					<img src="/assets/images/users/avatar.png" alt="user-icon" class="rounded-circle">
 				<?php } ?>
@@ -37,37 +34,50 @@
 	</div>
 	<div class="row user_info_div pt-4" data-rellax-speed="1">
 		<div class="col-12">
-			<legend>チーム情報詳細</legend>
+			<legend>通知情報詳細</legend>
 			<table class="table mb-4">
 				<tr>
-					<th scope="row"><?= __('チーム名') ?></th>
-					<td><?= h($team->team_name) ?></td>
+					<th scope="row"><?= __('タイトル') ?></th>
+					<td><?= h($userNotice->title) ?></td>
 				</tr>
 				<tr>
-					<th scope="row"><?= __('一言紹介文') ?></th>
-					<td><?= h($team->introduction) ?></td>
+					<th scope="row"><?= __('通知内容') ?></th>
+					<td><?= nl2br(h($userNotice->context)) ?></td>
+				</tr>
+				<tr>
+					<th scope="row"><?= __('通知日') ?></th>
+					<td><?= h($userNotice->send_date) ?></td>
 				</tr>
 				<tr>
 					<th scope="row"><?= __('作成日') ?></th>
-					<td><?= h($team->created) ?></td>
+					<td><?= h($userNotice->created) ?></td>
 				</tr>
 				<tr>
 					<th scope="row"><?= __('更新日') ?></th>
-					<td><?= h($team->modified) ?></td>
+					<td><?= h($userNotice->modified) ?></td>
 				</tr>
 			</table>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-12 text-center">
-			<a href="<?= $this->Url->build(['controller' => 'Teams',
-				'action' => 'edit',
-				$team->id]); ?>"
-				 class="btn btn-success mr-3">
-				<i class="fe-edit"></i>
-				<span>編集する</span>
-			</a>
-			<a href="<?= $this->Url->build(['controller' => 'Teams',
+			<?php
+			if ($this->request->session()->read('Auth.User.role') == ROLE_SYSTEM || $this->request->session()
+					->read('Auth.User.id') == $userNotice->user_id) {
+				if ($userNotice->send_date > Time::now()) {
+					?>
+					<a href="<?= $this->Url->build(['controller' => 'UserNotices',
+						'action' => 'edit',
+						$userNotice->id]); ?>"
+						 class="btn btn-success mr-3">
+						<i class="fe-edit"></i>
+						<span>編集する</span>
+					</a>
+					<?php
+				}
+			}
+			?>
+			<a href="<?= $this->Url->build(['controller' => 'UserNotices',
 				'action' => 'index']); ?>" class="btn btn-info">
 				<i class="fe-skip-back"></i>
 				<span>一覧に戻る</span>
