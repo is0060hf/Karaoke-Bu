@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -19,8 +18,8 @@ use Cake\ORM\Entity;
  * @property string|null $uuid
  * @property string|null $icon_image_path
  * @property string|null $cover_image_path
- * @property int|null $region
- * @property int|null $prefecture
+ * @property int $region
+ * @property int $prefecture
  * @property \Cake\I18n\FrozenTime $modified
  * @property \Cake\I18n\FrozenTime|null $created
  *
@@ -29,6 +28,8 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Event[] $events
  * @property \App\Model\Entity\TeamPost[] $team_posts
  * @property \App\Model\Entity\TeamUserLink[] $team_user_links
+ * @property \App\Model\Entity\UserNoticeFlag[] $user_notice_flags
+ * @property \App\Model\Entity\UserNotice[] $user_notices
  */
 class User extends Entity {
 	/**
@@ -59,7 +60,9 @@ class User extends Entity {
 		'event_entries' => true,
 		'events' => true,
 		'team_posts' => true,
-		'team_user_links' => true];
+		'team_user_links' => true,
+		'user_notice_flags' => true,
+		'user_notices' => true];
 
 	/**
 	 * Fields that are excluded from JSON versions of the entity.

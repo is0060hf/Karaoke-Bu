@@ -17,3 +17,7 @@ function clearEventSearchElements() {
 	document.getElementById("region").selectedIndex = 0;
 	document.getElementById("prefecture").selectedIndex = 0;
 }
+
+function clearUserNoticeSearchElements() {
+	document.getElementById("notice_level").selectedIndex = 0;
+}

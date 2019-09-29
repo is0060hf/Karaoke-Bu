@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -7,23 +8,23 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * TeamUserLinks Model
+ * UserNoticeFlags Model
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\TeamsTable&\Cake\ORM\Association\BelongsTo $Teams
+ * @property \App\Model\Table\UserNoticesTable&\Cake\ORM\Association\BelongsTo $UserNotices
  *
- * @method \App\Model\Entity\TeamUserLink get($primaryKey, $options = [])
- * @method \App\Model\Entity\TeamUserLink newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\TeamUserLink[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\TeamUserLink|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\TeamUserLink saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\TeamUserLink patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\TeamUserLink[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\TeamUserLink findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\UserNoticeFlag get($primaryKey, $options = [])
+ * @method \App\Model\Entity\UserNoticeFlag newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\UserNoticeFlag[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\UserNoticeFlag|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\UserNoticeFlag saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\UserNoticeFlag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\UserNoticeFlag[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\UserNoticeFlag findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class TeamUserLinksTable extends Table {
+class UserNoticeFlagsTable extends Table {
 	/**
 	 * Initialize method
 	 *
@@ -33,7 +34,7 @@ class TeamUserLinksTable extends Table {
 	public function initialize(array $config) {
 		parent::initialize($config);
 
-		$this->setTable('team_user_links');
+		$this->setTable('user_notice_flags');
 		$this->setDisplayField('id');
 		$this->setPrimaryKey('id');
 
@@ -41,7 +42,7 @@ class TeamUserLinksTable extends Table {
 
 		$this->belongsTo('Users', ['foreignKey' => 'user_id',
 			'joinType' => 'INNER']);
-		$this->belongsTo('Teams', ['foreignKey' => 'team_id',
+		$this->belongsTo('UserNotices', ['foreignKey' => 'user_notice_id',
 			'joinType' => 'INNER']);
 	}
 
@@ -54,9 +55,7 @@ class TeamUserLinksTable extends Table {
 	public function validationDefault(Validator $validator) {
 		$validator->integer('id')->allowEmptyString('id', null, 'create');
 
-		$validator->integer('status')->requirePresence('status', 'create')->notEmptyString('status');
-
-		$validator->integer('role')->requirePresence('role', 'create')->notEmptyString('role');
+		$validator->boolean('open_flg')->notEmptyString('open_flg');
 
 		return $validator;
 	}
@@ -70,7 +69,7 @@ class TeamUserLinksTable extends Table {
 	 */
 	public function buildRules(RulesChecker $rules) {
 		$rules->add($rules->existsIn(['user_id'], 'Users'));
-		$rules->add($rules->existsIn(['team_id'], 'Teams'));
+		$rules->add($rules->existsIn(['user_notice_id'], 'UserNotices'));
 
 		return $rules;
 	}

@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Model\Table;
 
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -38,9 +38,7 @@ class TeamsTable extends Table {
 
 		$this->addBehavior('Timestamp');
 
-		$this->hasMany('TeamUserLinks', ['foreignKey' => 'team_id',
-			'dependent' => true,
-			'cascadeCallbacks' => true,]);
+		$this->hasMany('TeamUserLinks', ['foreignKey' => 'team_id']);
 	}
 
 	/**

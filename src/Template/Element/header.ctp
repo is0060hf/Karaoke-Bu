@@ -1,15 +1,23 @@
+<?php
+
+use Cake\ORM\TableRegistry;
+
+?>
+
 <!-- Topbar Start -->
 <div class="navbar-custom">
 	<ul class="list-unstyled topbar-right-menu float-right mb-0">
 
 		<?php
 		if ($this->request->session()->check('Auth')) {
+			$userNoticeFlags = TableRegistry::get('UserNoticeFlags')->find('All')
+				->where(['user_id' => $this->request->session()->read('Auth.User.id')])->order(['created' => 'ASC'])->all();
 			?>
 			<li class="dropdown notification-list">
 				<a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button"
 					 aria-haspopup="false" aria-expanded="false">
 					<i class="fe-bell noti-icon"></i>
-					<span class="badge badge-danger rounded-circle noti-icon-badge">2</span>
+					<span class="badge badge-danger rounded-circle noti-icon-badge"><?= $userNoticeFlags->count() ?></span>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right dropdown-lg">
 
@@ -18,69 +26,42 @@
 						<h5 class="m-0">
 						<span class="float-right">
 							<a href="" class="text-dark">
-								<small>Clear All</small>
+								<small>既読にする</small>
 							</a>
-						</span>Notification
+						</span>最新通知一覧
 						</h5>
 					</div>
 
 					<div class="slimscroll noti-scroll">
-
-						<!-- item-->
-						<a href="javascript:void(0);" class="dropdown-item notify-item">
-							<div class="notify-icon">
-								<img src="assets/images/users/avatar-2.jpg" class="img-fluid rounded-circle" alt=""/></div>
-							<p class="notify-details">Cristina Pride</p>
-							<p class="text-muted mb-0 user-msg">
-								<small>Hi, How are you? What about our next meeting</small>
-							</p>
-						</a>
-
-						<!-- item-->
-						<a href="javascript:void(0);" class="dropdown-item notify-item active">
-							<div class="notify-icon bg-warning"><i class="mdi mdi-comment-account-outline"></i></div>
-							<p class="notify-details">Caleb Flakelar commented on Admin
-								<small class="text-muted">1 min ago</small>
-							</p>
-						</a>
-
-						<!-- item-->
-						<a href="javascript:void(0);" class="dropdown-item notify-item">
-							<div class="notify-icon bg-info"><i class="mdi mdi-account-plus"></i></div>
-							<p class="notify-details">New user registered.
-								<small class="text-muted">5 hours ago</small>
-							</p>
-						</a>
-
-						<!-- item-->
-						<a href="javascript:void(0);" class="dropdown-item notify-item">
-							<div class="notify-icon">
-								<img src="assets/images/users/avatar-4.jpg" class="img-fluid rounded-circle" alt=""/></div>
-							<p class="notify-details">Karen Robinson</p>
-							<p class="text-muted mb-0 user-msg">
-								<small>Wow ! this admin looks good and awesome design</small>
-							</p>
-						</a>
-
-
-						<!-- item-->
-						<a href="javascript:void(0);" class="dropdown-item notify-item">
-							<div class="notify-icon bg-danger"><i class="mdi mdi-comment-account-outline"></i></div>
-							<p class="notify-details">Caleb Flakelar commented on Admin
-								<small class="text-muted">4 days ago</small>
-							</p>
-						</a>
-
-						<!-- item-->
-						<a href="javascript:void(0);" class="dropdown-item notify-item">
-							<div class="notify-icon bg-primary">
-								<i class="mdi mdi-heart"></i>
-							</div>
-							<p class="notify-details">Carlos Crouch liked
-								<b>Admin</b>
-								<small class="text-muted">13 days ago</small>
-							</p>
-						</a>
+						<?php
+						foreach ($userNoticeFlags as $userNoticeFlag) {
+							$userNotice = TableRegistry::get('UserNotices')->find('All')
+								->where(['id' => $userNoticeFlag->user_notice_id])->first();
+							?>
+							<a href="<?php echo $this->Url->build(['controller' => 'UserNotices',
+								'action' => 'view',
+								$userNotice->id]); ?>" class="dropdown-item notify-item">
+								<?php
+								$icon_image_path = $userNotice->icon_image_path;
+								if (isset($icon_image_path)) {
+									?>
+									<div class="notify-icon">
+										<img src="<?= h($icon_image_path) ?>" class="img-fluid rounded-circle" alt=""/></div>
+									<?php
+								} else {
+									?>
+									<div class="notify-icon bg-warning"><i class="mdi mdi-comment-account-outline"></i></div>
+									<?php
+								}
+								?>
+								<p class="notify-details"><?= h($userNotice->title) ?></p>
+								<p class="text-muted mb-0 user-msg">
+									<small><?= h(mb_strimwidth($userNotice->context, 0, 20, '...', 'UTF-8')) ?></small>
+								</p>
+							</a>
+							<?php
+						}
+						?>
 					</div>
 
 					<!-- All-->

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Utils\FileUtil;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
@@ -262,7 +263,7 @@ class UsersController extends AppController {
 				if (!is_null($cover_image_path)) {
 					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
 					if ($cover_image_path['tmp_name'] != '') {
-						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir,
+						$uploadedFileName = FileUtil::file_upload($this->request->getData('cover_image_path'), $dir,
 							UPLOAD_COVER_IMAGE_CAPACITY);
 						$user->cover_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
@@ -274,7 +275,7 @@ class UsersController extends AppController {
 				$icon_image_path = $this->request->getData('icon_image_path');
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
-						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir,
+						$uploadedFileName = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
 							UPLOAD_ICON_IMAGE_CAPACITY);
 						$user->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
@@ -293,18 +294,12 @@ class UsersController extends AppController {
 					$connection->begin();
 
 					if ($this->Users->save($user)) {
-						TransportFactory::setConfig('mailtrap', ['host' => 'smtp.mailtrap.io',
-							'port' => 2525,
-							'username' => '294cde5d2866a3',
-							'password' => '0553a77e71612a',
-							'className' => 'Smtp']);
 						$email = new Email('default');
 						$email_body = AUTH_MAIL_BODY;
 						$one_time_url = 'http://localhost:8000/users/auth?query='.$sha_query;
 						$email_body = str_replace("{{_$1_}}", $user->nick_name, $email_body);
 						$email_body = str_replace("{{_$2_}}", $one_time_url, $email_body);
-						$email->from([MAIL_FROM_ADDRESS => MAIL_FROM_NAME])->to($user->mail_address)->subject(AUTH_MAIL_TITLE)
-							->send($email_body);
+						$email->from([MAIL_FROM_ADDRESS => MAIL_FROM_NAME])->to($user->mail_address)->subject(AUTH_MAIL_TITLE)->send($email_body);
 
 						$connection->commit();
 
@@ -335,8 +330,7 @@ class UsersController extends AppController {
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
 	public function edit($id = null) {
-		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM && $this->request->session()
-				->read('Auth.User.id') != $id) {
+		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM && $this->request->session()->read('Auth.User.id') != $id) {
 			$this->Flash->error(__('ご指定の操作は権限がありません。'));
 			return $this->redirect(['controller' => 'pages',
 				'action' => 'error_user_roll']);
@@ -360,7 +354,7 @@ class UsersController extends AppController {
 				if (!is_null($cover_image_path)) {
 					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
 					if ($cover_image_path['tmp_name'] != '') {
-						$uploadedFileName = $this->file_upload($this->request->getData('cover_image_path'), $dir,
+						$uploadedFileName = FileUtil::file_upload($this->request->getData('cover_image_path'), $dir,
 							UPLOAD_COVER_IMAGE_CAPACITY);
 						$user->cover_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
@@ -372,14 +366,13 @@ class UsersController extends AppController {
 				$icon_image_path = $this->request->getData('icon_image_path');
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
-						$uploadedFileName = $this->file_upload($this->request->getData('icon_image_path'), $dir,
+						$uploadedFileName = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
 							UPLOAD_ICON_IMAGE_CAPACITY);
 						$user->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$user->icon_image_path = null;
 					}
 				}
-
 
 				// トランザクション開始
 				$connection = ConnectionManager::get('default');
@@ -413,8 +406,7 @@ class UsersController extends AppController {
 	 * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
 	 */
 	public function passwordUpdate($id = null) {
-		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM && $this->request->session()
-				->read('Auth.User.id') != $id) {
+		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM && $this->request->session()->read('Auth.User.id') != $id) {
 			$this->Flash->error(__('ご指定の操作は権限がありません。'));
 			return $this->redirect(['controller' => 'pages',
 				'action' => 'error_user_roll']);
@@ -432,16 +424,10 @@ class UsersController extends AppController {
 					$user->password = $this->request->getData('password');
 					$user->password = password_hash($user->password, PASSWORD_DEFAULT);
 					if ($this->Users->save($user)) {
-						TransportFactory::setConfig('mailtrap', ['host' => 'smtp.mailtrap.io',
-							'port' => 2525,
-							'username' => '294cde5d2866a3',
-							'password' => '0553a77e71612a',
-							'className' => 'Smtp']);
 						$email = new Email('default');
 						$email_body = UPDATE_PASSWORD_MAIL_BODY;
 						$email_body = str_replace("{{_$1_}}", $user->nick_name, $email_body);
-						$email->from([MAIL_FROM_ADDRESS => MAIL_FROM_NAME])->to($user->mail_address)
-							->subject(UPDATE_PASSWORD_MAIL_TITLE)->send($email_body);
+						$email->from([MAIL_FROM_ADDRESS => MAIL_FROM_NAME])->to($user->mail_address)->subject(UPDATE_PASSWORD_MAIL_TITLE)->send($email_body);
 
 						$this->Flash->success(__('パスワードを正常に更新しました'));
 						return $this->redirect(['action' => 'view',
@@ -459,71 +445,6 @@ class UsersController extends AppController {
 		}
 		$this->set(compact('user'));
 		return null;
-	}
-
-	public function file_upload($file = null, $dir = null, $limitFileSize = 1024 * 1024) {
-		try {
-			// ファイルを保存するフォルダ $dirの値のチェック
-			if ($dir) {
-				if (!file_exists($dir)) {
-					throw new RuntimeException('指定のディレクトリがありません。');
-				}
-			} else {
-				throw new RuntimeException('ディレクトリの指定がありません。');
-			}
-
-			// 未定義、複数ファイル、破損攻撃のいずれかの場合は無効処理
-			if (!isset($file['error']) || is_array($file['error'])) {
-				throw new RuntimeException('Invalid parameters.');
-			}
-
-			// エラーのチェック
-			switch ($file['error']) {
-				case 0:
-					break;
-				case UPLOAD_ERR_OK:
-					break;
-				case UPLOAD_ERR_NO_FILE:
-					throw new RuntimeException('No file sent.');
-				case UPLOAD_ERR_INI_SIZE:
-				case UPLOAD_ERR_FORM_SIZE:
-					throw new RuntimeException('Exceeded filesize limit.');
-				default:
-					throw new RuntimeException('Unknown errors.');
-			}
-
-			// ファイル情報取得
-			$fileInfo = new File($file["tmp_name"]);
-
-			// ファイルサイズのチェック
-			if ($fileInfo->size() > $limitFileSize) {
-				throw new RuntimeException('Exceeded filesize limit.');
-			}
-
-			// ファイルタイプのチェックし、拡張子を取得
-			if (false === $ext = array_search($fileInfo->mime(), ['jpg' => 'image/jpeg',
-					'jpeg' => 'image/jpeg',
-					'png' => 'image/png',
-					'gif' => 'image/gif',], true)) {
-				throw new RuntimeException('画像ファイル以外がアップロードされました。');
-			}
-
-			// ファイル名の生成
-			//            $uploadFile = $file["name"] . "." . $ext;
-			$uploadFile = sha1_file($file["tmp_name"]).".".$ext;
-
-			// ファイルの移動
-			if (!move_uploaded_file($file["tmp_name"], $dir."/".$uploadFile)) {
-				throw new RuntimeException('Failed to move uploaded file.');
-			}
-
-			// 処理を抜けたら正常終了
-			//            echo 'File is uploaded successfully.';
-
-		} catch (RuntimeException $e) {
-			throw $e;
-		}
-		return $uploadFile;
 	}
 
 	/**
@@ -599,14 +520,7 @@ class UsersController extends AppController {
 	public function deleteIconImageOnEdit($id = null) {
 		$user = $this->Users->get($id);
 
-		if ($user->icon_image_path != '') {
-			if (file_exists($user->icon_image_path)) {
-				unlink(WWW_ROOT.$user->icon_image_path);
-			}
-		}
-
-		$user->icon_image_path = null;
-		if ($this->Users->save($user)) {
+		if (FileUtil::deleteIconImageOnEdit($user, $this->Users)) {
 			$this->Flash->success(__('アイコン画像を削除しました。'));
 		} else {
 			$this->Flash->error(__('アイコン画像の削除に失敗しました。'));
@@ -629,14 +543,7 @@ class UsersController extends AppController {
 	public function deleteCoverImageOnEdit($id = null) {
 		$user = $this->Users->get($id);
 
-		if ($user->cover_image_path != '') {
-			if (file_exists($user->cover_image_path)) {
-				unlink(WWW_ROOT.$user->cover_image_path);
-			}
-		}
-
-		$user->cover_image_path = null;
-		if ($this->Users->save($user)) {
+		if (FileUtil::deleteCoverImageOnEdit($user, $this->Users)) {
 			$this->Flash->success(__('カバー画像を削除しました。'));
 		} else {
 			$this->Flash->error(__('カバー画像の削除に失敗しました。'));

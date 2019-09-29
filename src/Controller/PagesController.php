@@ -54,10 +54,7 @@ class PagesController extends AppController {
 	 * Displays a view
 	 *
 	 * @param array ...$path Path segments.
-	 * @return \Cake\Http\Response|null
-	 * @throws \Cake\Http\Exception\ForbiddenException When a directory traversal attempt.
-	 * @throws \Cake\Http\Exception\NotFoundException When the view file could not
-	 *   be found or \Cake\View\Exception\MissingTemplateException in debug mode.
+	 * @return void
 	 */
 	public function display(...$path) {
 		switch ($path[0]) {
@@ -77,6 +74,9 @@ class PagesController extends AppController {
 				$this->layout = 'my_error_layout';
 				break;
 			case 'error-user-roll':
+				$this->layout = 'my_error_layout';
+				break;
+			case 'error-expired-notice':
 				$this->layout = 'my_error_layout';
 				break;
 			default:

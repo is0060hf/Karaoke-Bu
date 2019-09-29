@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Model\Table;
 
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -62,15 +62,16 @@ class EventsTable extends Table {
 
 		$validator->scalar('entry_template')->maxLength('entry_template', 4294967295)->allowEmptyString('entry_template');
 
-		$validator->scalar('drink')->maxLength('drink', 64)->allowEmptyString('drink');
+		$validator->integer('drink')->allowEmptyString('drink');
 
-		$validator->scalar('food')->maxLength('food', 64)->allowEmptyString('food');
+		$validator->integer('food')->allowEmptyString('food');
 
 		$validator->dateTime('start_time')->requirePresence('start_time', 'create')->notEmptyDateTime('start_time');
 
 		$validator->dateTime('end_time')->requirePresence('end_time', 'create')->notEmptyDateTime('end_time');
 
-		$validator->integer('budget')->requirePresence('budget', 'create')->notEmptyString('budget');
+		$validator->scalar('budget')->maxLength('budget', 64)->requirePresence('budget', 'create')
+			->notEmptyString('budget');
 
 		$validator->dateTime('deadline')->requirePresence('deadline', 'create')->notEmptyDateTime('deadline');
 

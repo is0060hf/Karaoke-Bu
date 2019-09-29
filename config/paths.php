@@ -359,6 +359,19 @@ define('REGION_PREFECTURE_MAPPING', [
 	]
 ]);
 
+/**
+ * 通知レベル
+ */
+define('NOTICE_ALL', '1');
+define('NOTICE_EXCLUDING_ADVERTISE', '2');
+define('NOTICE_EXCLUDING_EVENT', '3');
+define('NOTICE_EXCLUDING_FRIEND', '4');
+define('NOTICE_ARRAY', ['-1' => "未選択",
+	NOTICE_ALL => '全通知',
+	NOTICE_EXCLUDING_ADVERTISE => '広告通知',
+	NOTICE_EXCLUDING_EVENT => 'イベント通知',
+	NOTICE_EXCLUDING_FRIEND => 'フレンド通知']);
+
 // カバー画像のアップロード制限は10MBとする
 define('UPLOAD_COVER_IMAGE_CAPACITY', 10000000);
 

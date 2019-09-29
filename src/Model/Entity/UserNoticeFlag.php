@@ -1,22 +1,23 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 
 /**
- * EventComment Entity
+ * UserNoticeFlag Entity
  *
  * @property int $id
- * @property int $event_id
  * @property int $user_id
- * @property string $context
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property int $user_notice_id
+ * @property bool $open_flg
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \App\Model\Entity\Event $event
  * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\UserNotice $user_notice
  */
-class EventComment extends Entity {
+class UserNoticeFlag extends Entity {
 	/**
 	 * Fields that can be mass assigned using newEntity() or patchEntity().
 	 *
@@ -26,11 +27,11 @@ class EventComment extends Entity {
 	 *
 	 * @var array
 	 */
-	protected $_accessible = ['event_id' => true,
-		'user_id' => true,
-		'context' => true,
+	protected $_accessible = ['user_id' => true,
+		'user_notice_id' => true,
+		'open_flg' => true,
 		'created' => true,
 		'modified' => true,
-		'event' => true,
-		'user' => true];
+		'user' => true,
+		'user_notice' => true];
 }
