@@ -42,7 +42,8 @@ class UserNoticesController extends AppController {
 	public function isAuthorized($user) {
 		// 誰でも許可するアクション
 		if (in_array($this->request->getParam('action'), ['myNotice',
-			'view'])) {
+			'view',
+			'openAllNotice'])) {
 			return true;
 		}
 
@@ -400,6 +401,44 @@ class UserNoticesController extends AppController {
 		}
 
 		$this->set(compact('userNotice'));
+		return $this->redirect($this->referer());
+	}
+
+	/**
+	 * ログインしているユーザーの通知を全て既読にする
+	 */
+	public function openAllNotice() {
+		// ログインユーザーに通知されているものだけで絞り込む
+		$userNoticeFlags = TableRegistry::get('UserNoticeFlags')->find('All')->where(['user_id' => $this->request->session()
+				->read('Auth.User.id'),
+				'open_flg' => false])->all();
+
+		// トランザクション開始
+		$connection = ConnectionManager::get('default');
+		$connection->begin();
+
+		$saveFlg = true;
+		foreach ($userNoticeFlags as $userNoticeFlag) {
+			$userNotice = TableRegistry::get('UserNotices')->find('All')->where(['id' => $userNoticeFlag->user_notice_id])
+				->first();
+
+			if ($userNotice) {
+				$sendDate = new Time($userNotice->send_date);
+				if (!$sendDate->gt(Time::now())) {
+					$userNoticeFlag->open_flg = true;
+					if (!TableRegistry::get('UserNoticeFlags')->save($userNoticeFlag)) {
+						$saveFlg = false;
+					}
+				}
+			}
+		}
+
+		if ($saveFlg) {
+			$connection->commit();
+		} else {
+			$connection->rollback();
+		}
+
 		return $this->redirect($this->referer());
 	}
 }
