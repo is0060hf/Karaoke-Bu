@@ -16,19 +16,23 @@ use Cake\ORM\TableRegistry;
 			$userNoticeFlagIds = TableRegistry::get('UserNoticeFlags')->find('All')
 				->where(['user_id' => $this->request->session()->read('Auth.User.id'),
 					'open_flg' => false])->order(['created' => 'ASC'])->extract('user_notice_id')->toList();
-			$userNotices = TableRegistry::get('UserNotices')->find('All')->where(['send_date <' => Time::now()]);
-			$userNotices = $userNotices->where(function (QueryExpression $exp, Query $q) use ($userNoticeFlagIds) {
-				return $exp->in('id', $userNoticeFlagIds);
-			});
+			if (count($userNoticeFlagIds) > 0) {
+				$userNotices = TableRegistry::get('UserNotices')->find('All')->where(['send_date <' => Time::now()]);
+				$userNotices = $userNotices->where(function (QueryExpression $exp, Query $q) use ($userNoticeFlagIds) {
+					return $exp->in('id', $userNoticeFlagIds);
+				})->toList();
+			} else {
+				$userNotices = [];
+			}
 			?>
 			<li class="dropdown notification-list">
 				<a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button"
 					 aria-haspopup="false" aria-expanded="false">
 					<i class="fe-bell noti-icon"></i>
 					<?php
-					if ($userNotices->count() > 0) {
+					if (count($userNotices) > 0) {
 						?>
-						<span class="badge badge-danger rounded-circle noti-icon-badge"><?= $userNotices->count() ?></span>
+						<span class="badge badge-danger rounded-circle noti-icon-badge"><?= count($userNotices) ?></span>
 						<?php
 					}
 					?>
@@ -39,7 +43,8 @@ use Cake\ORM\TableRegistry;
 					<div class="dropdown-item noti-title">
 						<h5 class="m-0">
 						<span class="float-right">
-							<a href="" class="text-dark">
+							<a href="<?= $this->Url->build(['controller' => 'UserNotices',
+								'action' => 'openAllNotice']); ?>" class="text-dark">
 								<small>既読にする</small>
 							</a>
 						</span>最新通知一覧
@@ -50,7 +55,7 @@ use Cake\ORM\TableRegistry;
 						<?php
 						foreach ($userNotices as $userNotice) {
 							?>
-							<a href="<?php echo $this->Url->build(['controller' => 'UserNotices',
+							<a href="<?= $this->Url->build(['controller' => 'UserNotices',
 								'action' => 'view',
 								$userNotice->id]); ?>" class="dropdown-item notify-item">
 								<?php
@@ -74,7 +79,7 @@ use Cake\ORM\TableRegistry;
 							<?php
 						}
 
-						if ($userNotices->count() == 0) {
+						if (count($userNotices) == 0) {
 							?>
 							<a href="javascript:void(0);" class="dropdown-item notify-item active">
 								<div class="notify-icon bg-warning"><i class="mdi mdi-comment-account-outline"></i></div>
