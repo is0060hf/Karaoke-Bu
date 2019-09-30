@@ -43,6 +43,8 @@ class UserNoticesController extends AppController {
 		// 誰でも許可するアクション
 		if (in_array($this->request->getParam('action'), ['myNotice',
 			'view',
+			'add',
+			'edit',
 			'openAllNotice'])) {
 			return true;
 		}
@@ -289,11 +291,21 @@ class UserNoticesController extends AppController {
 	 */
 	public function edit($id = null) {
 		$this->viewBuilder()->setLayout('editor_layout');
-		$userNotice = $this->UserNotices->get($id, ['contain' => []]);
 
-		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM && $this->request->session()
-				->read('Auth.User.id') != $userNotice->user_id) {
-			$this->Flash->error(__('ご指定の操作は権限がありません。'));
+		// ログインユーザーに通知されているものだけで絞り込む
+		$userNotice = $this->UserNotices->get($id, ['contain' => []]);
+		if ($this->request->session()->read('Auth.User.role') != ROLE_SYSTEM) {
+			if ($this->request->session()->read('Auth.User.id') != $userNotice->user_id) {
+				$this->Flash->error(__('通知登録者のみが編集可能です。'));
+				return $this->redirect(['controller' => 'pages',
+					'action' => 'error_user_roll']);
+			}
+		}
+
+		// 公開後の通知はシステム管理者であっても変更不可
+		$sendDate = new Time($userNotice->send_date);
+		if (!$sendDate->gt(Time::now())) {
+			$this->Flash->error(__('公開後の通知は編集できません。'));
 			return $this->redirect(['controller' => 'pages',
 				'action' => 'error_user_roll']);
 		}
