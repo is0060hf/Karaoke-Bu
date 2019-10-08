@@ -108,6 +108,23 @@
 							</li>
 						</ul>
 					</li>
+					<li>
+						<a href="javascript: void(0);">
+							<i class="fe-mic"></i>
+							<span> カラオケ </span>
+							<span class="menu-arrow"></span>
+						</a>
+						<ul class="nav-second-level" aria-expanded="false">
+							<li>
+								<?= $this->Html->link(__('新規店舗登録'), ['controller' => 'Stores',
+									'action' => 'add']) ?>
+							</li>
+							<li>
+								<?= $this->Html->link(__('店舗情報一覧'), ['controller' => 'Stores',
+									'action' => 'index']) ?>
+							</li>
+						</ul>
+					</li>
 					<?php
 				}
 				?>

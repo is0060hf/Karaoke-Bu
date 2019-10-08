@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Utils\FileUtil;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use RuntimeException;
 
 
 /**
@@ -18,6 +20,70 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class StoresController extends AppController {
 
 	/**
+	 * 店舗画像の一覧を取得する
+	 * @throws \Exception
+	 */
+	public function ajaxGetStoreImages() {
+		$this->autoRender = FALSE;
+		$this->response->type('json');
+
+		if (!$this->request->is('ajax')) {
+			throw new \Exception();
+		}
+
+		$id = $this->request->getData('store_id');
+		$result = [];
+		$error = [];
+		$storeImages = TableRegistry::get('StoreImages')->find('All')->where(['store_id' => $id]);
+
+		foreach ($storeImages as $storeImage) {
+			$imageInfo = ['store_image_id' => $storeImage->id,
+				'image_path' => $storeImage->image_path,
+				'image_full_path' => WWW_ROOT.$storeImage->image_path,
+				'image_size' => $storeImage->image_size,
+				'image_type' => $storeImage->image_type,
+				'image_ext' => $storeImage->image_ext,
+				'image_name' => $storeImage->image_name,];
+			array_push($result, $imageInfo);
+		}
+
+		// json_encodeを使用してJSON形式で返却
+		echo json_encode(compact('status', 'result', 'error'));
+	}
+
+	/**
+	 * 店舗画像を削除する
+	 * @throws \Exception
+	 */
+	public function ajaxDeleteStoreImage() {
+		$this->autoRender = FALSE;
+		$this->response->type('json');
+
+		if (!$this->request->is('ajax')) {
+			throw new \Exception();
+		}
+
+		$imagePath = $this->request->getData('image_path');
+		$result = false;
+		$error = [];
+		$storeImagesTable = TableRegistry::get('StoreImages');
+		$storeImage = $storeImagesTable->find('All')->where(['image_path' => $imagePath])->first();
+
+		if ($storeImage) {
+			if (FileUtil::deleteImageOnEdit($storeImage, $storeImagesTable)) {
+				$result = true;
+			} else {
+				$error['message'] = '削除に失敗しました。';
+			}
+		} else {
+			$error['message'] = '削除対象が存在しません。';
+		}
+
+		// json_encodeを使用してJSON形式で返却
+		echo json_encode(compact('status', 'result', 'error'));
+	}
+
+	/**
 	 * ログインしていなくてもアクセスできるページを定義する
 	 * 一覧画面と詳細画面はログイン不要とする
 	 * @param Event $event
@@ -26,7 +92,8 @@ class StoresController extends AppController {
 	public function beforeFilter(Event $event) {
 		parent::beforeFilter($event);
 		$this->Auth->allow(['index',
-			'view']);
+			'view',
+			'ajaxGetStoreImages']);
 	}
 
 	/**
@@ -38,10 +105,14 @@ class StoresController extends AppController {
 	 */
 	public function isAuthorized($user) {
 		if (in_array($this->request->getParam('action'), ['index',
+			'ajaxGetStoreImages',
+			'ajaxDeleteStoreImage',
 			'view',
 			'add',
 			'edit',
-			'delete'])) {
+			'delete',
+			'deleteStoreImage',
+			'uploadStoreImage'])) {
 			return true;
 		}
 
@@ -169,6 +240,54 @@ class StoresController extends AppController {
 	}
 
 	/**
+	 * 店舗画像をアップロードする
+	 *
+	 * @return \Cake\Http\Response|null
+	 */
+	public function uploadStoreImage() {
+		if ($this->request->is(['patch',
+			'post',
+			'put'])) {
+			$id = $this->request->getData('id');
+			$table_name = $this->request->getData('table_name');
+			$column_name = $this->request->getData('column_name');
+			$image_table_name = $this->request->getData('image_table_name');
+			$limit_size = $this->request->getData('limit_size');
+			$limit_size = isset($limit_size) ? $limit_size : 1024 * 1024;
+
+			// 必要な項目が存在しない場合は
+			if (!isset($id) || !isset($table_name) || !isset($column_name) || !isset($image_table_name)) {
+				$this->Flash->error(__('店舗画像のアップロードに失敗しました。ERROR_001'));
+			}
+
+			try {
+				$move_dir = realpath(WWW_ROOT."/upload_img");
+				$uploadResult = FileUtil::file_upload($this->request->getData('file'), $move_dir, $limit_size);
+				$storeImagesTable = TableRegistry::get($image_table_name);
+
+				$imageEntity = $storeImagesTable->newEntity();
+				$imageEntity->store_id = $id;
+				$imageEntity->image_path = '/upload_img/'.$uploadResult['path'];
+				$imageEntity->image_type = $uploadResult['type'];
+				$imageEntity->image_ext = $uploadResult['ext'];
+				$imageEntity->image_name = $uploadResult['name'];
+				$imageEntity->image_size = $uploadResult['size'];
+
+				if ($storeImagesTable->save($imageEntity)) {
+					$this->Flash->success(__('店舗画像をアップロードしました。'));
+				} else {
+					FileUtil::deleteImageOnEdit($imageEntity, $storeImagesTable);
+					$this->Flash->error(__('店舗画像のアップロードに失敗しました。ERROR_002'));
+				}
+			} catch (RuntimeException $exception) {
+				$this->Flash->error(__('店舗画像のアップロードに失敗しました。ERROR_003'));
+			}
+		}
+
+		return $this->redirect($this->referer());
+	}
+
+	/**
 	 * 店舗情報を削除する機能
 	 *
 	 * 権限：だれでも
@@ -193,35 +312,26 @@ class StoresController extends AppController {
 	}
 
 	/**
-	 * 店舗画像を追加する機能
+	 * 店舗画像を削除するメソッド
 	 *
-	 * 権限：だれでも
+	 * @param null $id
+	 * @return mixed
+	 *
+	 * 権限：誰でも
 	 * ログイン要否：要
 	 * 画面遷移：なし
-	 *
-	 * @param null $storeId
 	 */
-	public function addImage($storeId = null) {
-		$this->request->allowMethod(['post']);
+	public function deleteStoreImage($id = null) {
+		if ($this->request->is('post')) {
+			$storeImagesTable = TableRegistry::get('StoreImages');
+			$storeImage = $storeImagesTable->find('All')->where(['id' => $id])->first();
 
-		if ($storeId) {
-			$storeImageEntity = TableRegistry::get('StoreImages');
-			$storeImage = $storeImageEntity->newEntity();
-			$storeImage = $storeImageEntity->patchEntity($storeImage, $this->request->getData());
-			$storeImage->store_id = $storeId;
-
-			if ($this->Friends->save($friend)) {
-				$this->Flash->success(__('ともだち登録しました。'));
-
-				$url = $this->referer(array('action' => 'index'));
-				return $this->redirect($url);
+			if (FileUtil::deleteImageOnEdit($storeImage, $storeImagesTable)) {
+				$this->Flash->success(__('店舗画像を削除しました。'));
 			} else {
-				$this->Flash->error(__('ともだち登録に失敗しました。しばらくしてからやり直してください。'));
-
-				$url = $this->referer(array('action' => 'index'));
-				return $this->redirect($url);
+				$this->Flash->error(__('店舗画像の削除に失敗しました。'));
 			}
 		}
+		return $this->redirect($this->referer());
 	}
-
 }

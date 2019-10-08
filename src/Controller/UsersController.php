@@ -263,8 +263,9 @@ class UsersController extends AppController {
 				if (!is_null($cover_image_path)) {
 					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
 					if ($cover_image_path['tmp_name'] != '') {
-						$uploadedFileName = FileUtil::file_upload($this->request->getData('cover_image_path'), $dir,
+						$uploadResult = FileUtil::file_upload($this->request->getData('cover_image_path'), $dir,
 							UPLOAD_COVER_IMAGE_CAPACITY);
+						$uploadedFileName = $uploadResult['path'];
 						$user->cover_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$user->cover_image_path = null;
@@ -275,8 +276,9 @@ class UsersController extends AppController {
 				$icon_image_path = $this->request->getData('icon_image_path');
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
-						$uploadedFileName = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
+						$uploadResult = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
 							UPLOAD_ICON_IMAGE_CAPACITY);
+						$uploadedFileName = $uploadResult['path'];
 						$user->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$user->icon_image_path = null;
@@ -354,8 +356,9 @@ class UsersController extends AppController {
 				if (!is_null($cover_image_path)) {
 					// tmp_nameがセットされていない場合はフォームが表示されているがファイルがアップされていない状態
 					if ($cover_image_path['tmp_name'] != '') {
-						$uploadedFileName = FileUtil::file_upload($this->request->getData('cover_image_path'), $dir,
+						$uploadResult = FileUtil::file_upload($this->request->getData('cover_image_path'), $dir,
 							UPLOAD_COVER_IMAGE_CAPACITY);
+						$uploadedFileName = $uploadResult['path'];
 						$user->cover_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$user->cover_image_path = null;
@@ -366,8 +369,9 @@ class UsersController extends AppController {
 				$icon_image_path = $this->request->getData('icon_image_path');
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
-						$uploadedFileName = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
+						$uploadResult = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
 							UPLOAD_ICON_IMAGE_CAPACITY);
+						$uploadedFileName = $uploadResult['path'];
 						$user->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$user->icon_image_path = null;

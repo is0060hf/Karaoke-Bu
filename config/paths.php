@@ -378,6 +378,12 @@ define('UPLOAD_COVER_IMAGE_CAPACITY', 10000000);
 // アイコン画像のアップロード制限は1MBとする
 define('UPLOAD_ICON_IMAGE_CAPACITY', 1000000);
 
+// MIME TYPEの対応表
+define('MIME_TYPE', ['jpg' => 'image/jpeg',
+	'jpeg' => 'image/jpeg',
+	'png' => 'image/png',
+	'gif' => 'image/gif']);
+
 define('MAIL_FROM_ADDRESS', 'info@taylormode.co.jp');
 define('MAIL_FROM_NAME', 'カラオケ部');
 

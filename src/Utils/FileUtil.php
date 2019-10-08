@@ -8,6 +8,8 @@
 
 namespace App\Utils;
 
+use Cake\Log\Log;
+use Psr\Log\LogLevel;
 use RuntimeException;
 use Cake\Filesystem\File;
 
@@ -24,7 +26,7 @@ class FileUtil {
 			}
 
 			// 未定義、複数ファイル、破損攻撃のいずれかの場合は無効処理
-			if (!isset($file['error']) || is_array($file['error'])) {
+			if (!isset($file['error'])) {
 				throw new RuntimeException('Invalid parameters.');
 			}
 
@@ -43,25 +45,33 @@ class FileUtil {
 					throw new RuntimeException('Unknown errors.');
 			}
 
+			if (is_array($file['error'])) {
+				throw new RuntimeException('複数のファイルが同時にアップされました'.$file['error']);
+			}
+
 			// ファイル情報取得
 			$fileInfo = new File($file["tmp_name"]);
 
 			// ファイルサイズのチェック
-			if ($fileInfo->size() > $limitFileSize) {
+			$fileSize = $fileInfo->size();
+			if ($fileSize > $limitFileSize) {
 				throw new RuntimeException('Exceeded filesize limit.');
 			}
 
 			// ファイルタイプのチェックし、拡張子を取得
-			if (false === $ext = array_search($fileInfo->mime(), ['jpg' => 'image/jpeg',
-					'jpeg' => 'image/jpeg',
-					'png' => 'image/png',
-					'gif' => 'image/gif',], true)) {
+			if (false === $ext = array_search($fileInfo->mime(), MIME_TYPE, true)) {
 				throw new RuntimeException('画像ファイル以外がアップロードされました。');
 			}
 
 			// ファイル名の生成
 			//            $uploadFile = $file["name"] . "." . $ext;
-			$uploadFile = sha1_file($file["tmp_name"]).".".$ext;
+			$now = microtime(true);
+			Log::write('debug', '何かがうまくいかなかった');
+			Log::write('debug', $now);
+			Log::write('debug', $file["tmp_name"]);
+			$uploadFile = sha1($now.$file["tmp_name"]).".".$ext;
+			Log::write('debug', $now.$file["tmp_name"]);
+			Log::write('debug', $uploadFile);
 
 			// ファイルの移動
 			if (!move_uploaded_file($file["tmp_name"], $dir."/".$uploadFile)) {
@@ -74,7 +84,14 @@ class FileUtil {
 		} catch (RuntimeException $e) {
 			throw $e;
 		}
-		return $uploadFile;
+
+		$returnValue = ['path' => $uploadFile,
+			'ext' => $ext,
+			'type' => MIME_TYPE[$ext],
+			'name' => $file["name"],
+			'size' => $fileSize,];
+
+		return $returnValue;
 	}
 
 	/**
@@ -90,7 +107,7 @@ class FileUtil {
 	 */
 	static public function deleteIconImageOnEdit($entity, $table) {
 		if ($entity->icon_image_path != '') {
-			if (file_exists($entity->icon_image_path)) {
+			if (file_exists(WWW_ROOT.$entity->icon_image_path)) {
 				unlink(WWW_ROOT.$entity->icon_image_path);
 			}
 		}
@@ -112,12 +129,33 @@ class FileUtil {
 	 */
 	static public function deleteCoverImageOnEdit($entity, $table) {
 		if ($entity->cover_image_path != '') {
-			if (file_exists($entity->cover_image_path)) {
+			if (file_exists(WWW_ROOT.$entity->cover_image_path)) {
 				unlink(WWW_ROOT.$entity->cover_image_path);
 			}
 		}
 
 		$entity->cover_image_path = null;
 		return $table->save($entity);
+	}
+
+	/**
+	 * ○○イメージテーブルの画像を削除するためのメソッド
+	 *
+	 * @param $entity
+	 * @param $table
+	 * @return mixed
+	 *
+	 * 権限：誰でも
+	 * ログイン要否：要
+	 * 画面遷移：なし
+	 */
+	static public function deleteImageOnEdit($entity, $table) {
+		if ($entity->image_path != '') {
+			if (file_exists(WWW_ROOT.$entity->image_path)) {
+				unlink(WWW_ROOT.$entity->image_path);
+			}
+		}
+
+		return $table->delete($entity);
 	}
 }
