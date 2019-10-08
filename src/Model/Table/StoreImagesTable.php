@@ -54,6 +54,14 @@ class StoreImagesTable extends Table {
 		$validator->scalar('image_path')->maxLength('image_path', 256)->requirePresence('image_path', 'create')
 			->notEmptyFile('image_path');
 
+		$validator->scalar('image_name')->maxLength('image_name', 128)->allowEmptyFile('image_name');
+
+		$validator->scalar('image_ext')->maxLength('image_ext', 32)->allowEmptyFile('image_ext');
+
+		$validator->scalar('image_type')->maxLength('image_type', 64)->allowEmptyFile('image_type');
+
+		$validator->numeric('image_size')->allowEmptyFile('image_size');
+
 		return $validator;
 	}
 

@@ -226,8 +226,9 @@ class UserNoticesController extends AppController {
 				$icon_image_path = $this->request->getData('icon_image_path');
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
-						$uploadedFileName = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
+						$uploadResult = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
 							UPLOAD_ICON_IMAGE_CAPACITY);
+						$uploadedFileName = $uploadResult['path'];
 						$userNotice->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$userNotice->icon_image_path = null;
@@ -333,8 +334,9 @@ class UserNoticesController extends AppController {
 				$icon_image_path = $this->request->getData('icon_image_path');
 				if (!is_null($icon_image_path)) {
 					if ($icon_image_path['tmp_name'] != '') {
-						$uploadedFileName = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
+						$uploadResult = FileUtil::file_upload($this->request->getData('icon_image_path'), $dir,
 							UPLOAD_ICON_IMAGE_CAPACITY);
+						$uploadedFileName = $uploadResult['path'];
 						$userNotice->icon_image_path = '/upload_img/'.$uploadedFileName;
 					} else {
 						$userNotice->icon_image_path = null;
